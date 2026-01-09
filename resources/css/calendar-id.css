@@ -1,0 +1,51 @@
+/* Kustomisasi FullCalendar untuk Bahasa Indonesia */
+
+/* Pastikan font mendukung karakter Indonesia */
+.fc {
+    font-family: 'Figtree', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Styling untuk tombol dengan teks Indonesia */
+.fc-button {
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+
+/* Responsive button text untuk mobile */
+@media (max-width: 640px) {
+    .fc-today-button {
+        font-size: 0.7rem !important;
+    }
+    
+    .fc-dayGridMonth-button,
+    .fc-timeGridWeek-button,
+    .fc-timeGridDay-button {
+        font-size: 0.65rem !important;
+        padding: 0.25rem 0.4rem !important;
+    }
+}
+
+/* Styling untuk header dengan bulan Indonesia */
+.fc-toolbar-title {
+    text-transform: capitalize;
+}
+
+/* Styling untuk nama hari dalam bahasa Indonesia */
+.fc-col-header-cell-cushion {
+    text-transform: capitalize;
+}
+
+/* Pastikan teks tidak terpotong pada view mobile */
+@media (max-width: 480px) {
+    .fc-header-toolbar {
+        flex-direction: column;
+        align-items: center;
+        gap: 0.5rem;
+    }
+    
+    .fc-toolbar-chunk {
+        display: flex;
+        gap: 0.25rem;
+    }
+}
