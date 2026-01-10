@@ -18,6 +18,7 @@ class BookingController extends Controller
             'end_date' => 'nullable|date|after_or_equal:start_date',
             'month' => 'nullable|integer|between:1,12',
             'year' => 'nullable|integer|min:2020|max:' . (now()->year + 5),
+            'status' => 'nullable|in:pending,approved,rejected,cancelled',
         ]);
         
         $query = Booking::with(['room', 'user']);
@@ -37,6 +38,11 @@ class BookingController extends Controller
         
         if ($request->filled('end_date')) {
             $query->whereDate('start_time', '<=', $request->end_date);
+        }
+        
+        // Filter berdasarkan status
+        if ($request->filled('status')) {
+            $query->where('status', $request->status);
         }
         
         $bookings = $query->latest()->paginate(15);
@@ -173,6 +179,7 @@ class BookingController extends Controller
             'end_date' => 'nullable|date|after_or_equal:start_date',
             'month' => 'nullable|integer|between:1,12',
             'year' => 'nullable|integer|min:2020|max:' . (now()->year + 5),
+            'status' => 'nullable|in:pending,approved,rejected,cancelled',
         ]);
         
         $query = Booking::with(['room', 'user']);
@@ -214,6 +221,22 @@ class BookingController extends Controller
             
             $period = 'Sampai ' . $endDate->format('d F Y');
             $title = "Laporan Booking - {$period}";
+        }
+        
+        // Filter berdasarkan status
+        $statusFilter = '';
+        if ($request->filled('status')) {
+            $query->where('status', $request->status);
+            
+            $statusLabels = [
+                'pending' => 'Pending',
+                'approved' => 'Disetujui',
+                'rejected' => 'Ditolak',
+                'cancelled' => 'Dibatalkan'
+            ];
+            
+            $statusFilter = ' - Status: ' . $statusLabels[$request->status];
+            $title .= $statusFilter;
         }
         
         $bookings = $query->orderBy('start_time', 'desc')->get();
@@ -260,6 +283,12 @@ class BookingController extends Controller
         } else {
             $filename .= 'semua';
         }
+        
+        // Tambahkan status ke filename
+        if ($request->filled('status')) {
+            $filename .= '-' . $request->status;
+        }
+        
         $filename .= '.pdf';
             
         return $pdf->download($filename);

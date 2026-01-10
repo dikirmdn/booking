@@ -230,7 +230,7 @@
             opacity: 0.7;
         }
         
-        /* Business hours styling */
+
         .fc-non-business {
             background-color: #f9fafb;
         }
@@ -251,7 +251,7 @@
                 </div>
                 <div class="flex items-center space-x-4">
                     @auth
-                        <a href="{{ route('user.bookings.create') }}?room_id={{ $room->id }}" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md text-sm font-medium">
+                        <a href="{{ route('user.bookings.create') }}?room_id={{ $room->id }}" class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-md text-sm font-medium">
                             Book
                         </a>
                         <a href="{{ route('dashboard') }}" class="text-gray-600 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium">
