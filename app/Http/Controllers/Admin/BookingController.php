@@ -45,7 +45,7 @@ class BookingController extends Controller
             $query->where('status', $request->status);
         }
         
-        $bookings = $query->latest()->paginate(15);
+        $bookings = $query->latest()->paginate(10);
 
         return view('admin.bookings.index', compact('bookings'));
     }

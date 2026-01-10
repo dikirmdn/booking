@@ -76,8 +76,8 @@
             }
         }
         .fc-button {
-            background-color: #3b82f6 !important;
-            border-color: #3b82f6 !important;
+            background-color: #dc2626 !important;
+            border-color: #dc2626 !important;
             padding: 0.375rem 0.75rem !important;
             border-radius: 0.375rem !important;
             font-weight: 500 !important;
@@ -102,23 +102,23 @@
             }
         }
         .fc-button:hover {
-            background-color: #2563eb !important;
-            border-color: #2563eb !important;
+            background-color: #b91c1c !important;
+            border-color: #b91c1c !important;
         }
         .fc-button-active {
-            background-color: #1d4ed8 !important;
-            border-color: #1d4ed8 !important;
+            background-color: #991b1b !important;
+            border-color: #991b1b !important;
         }
         .fc-today-button {
-            background-color: #10b981 !important;
-            border-color: #10b981 !important;
+            background-color: #dc2626 !important;
+            border-color: #dc2626 !important;
         }
         .fc-today-button:hover {
-            background-color: #059669 !important;
-            border-color: #059669 !important;
+            background-color: #b91c1c !important;
+            border-color: #b91c1c !important;
         }
         .fc-day-today {
-            background-color: #eff6ff !important;
+            background-color: #fef2f2 !important;
         }
         .fc-event {
             border-radius: 0.25rem;
@@ -226,7 +226,7 @@
         
         /* Selection styles */
         .fc-highlight {
-            background-color: #dbeafe !important;
+            background-color: #fee2e2 !important;
             opacity: 0.7;
         }
         
@@ -238,11 +238,11 @@
 </head>
 <body class="font-sans antialiased bg-gray-50">
     <!-- Header -->
-    <header class="bg-white shadow-sm border-b border-gray-200">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between items-center py-6">
+    <header class="bg-white border-b border-gray-200 shadow-sm">
+        <div class="px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between py-6">
                 <div class="flex items-center space-x-4">
-                    <a href="{{ route('home') }}" class="text-blue-600 hover:text-blue-800">
+                    <a href="{{ route('home') }}" class="text-red-600 hover:text-red-800">
                         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
                         </svg>
@@ -251,14 +251,14 @@
                 </div>
                 <div class="flex items-center space-x-4">
                     @auth
-                        <a href="{{ route('user.bookings.create') }}?room_id={{ $room->id }}" class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-md text-sm font-medium">
+                        <a href="{{ route('user.bookings.create') }}?room_id={{ $room->id }}" class="px-4 py-2 text-sm font-medium text-white bg-red-500 rounded-md hover:bg-red-600">
                             Book
                         </a>
-                        <a href="{{ route('dashboard') }}" class="text-gray-600 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium">
+                        <a href="{{ route('dashboard') }}" class="px-3 py-2 text-sm font-medium text-gray-600 rounded-md hover:text-gray-900">
                             Dashboard
                         </a>
                     @else
-                        <a href="{{ route('login') }}" class="text-gray-600 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium">
+                        <a href="{{ route('login') }}" class="px-3 py-2 text-sm font-medium text-gray-600 rounded-md hover:text-gray-900">
                             Login untuk Book
                         </a>
                     @endauth
@@ -269,15 +269,15 @@
 
     <!-- Room Info -->
     <section class="bg-white border-b border-gray-200">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div class="px-4 py-6 mx-auto max-w-7xl sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 gap-6 md:grid-cols-3">
                 <div class="md:col-span-2">
                     @if($room->description)
-                        <p class="text-gray-600 mb-4">{{ $room->description }}</p>
+                        <p class="mb-4 text-gray-600">{{ $room->description }}</p>
                     @endif
                     
                     <div class="flex items-center mb-2">
-                        <svg class="w-5 h-5 text-gray-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg class="w-5 h-5 mr-2 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
                         </svg>
                         <span class="text-gray-700">Kapasitas: <strong>{{ $room->capacity }} orang</strong></span>
@@ -286,10 +286,10 @@
                 
                 @if($room->facilities && count($room->facilities) > 0)
                     <div>
-                        <h3 class="text-lg font-semibold text-gray-900 mb-3">Fasilitas</h3>
+                        <h3 class="mb-3 text-lg font-semibold text-gray-900">Fasilitas</h3>
                         <div class="flex flex-wrap gap-2">
                             @foreach($room->facilities as $facility)
-                                <span class="bg-blue-100 text-blue-800 text-sm font-medium px-3 py-1 rounded-full">
+                                <span class="px-3 py-1 text-sm font-medium text-red-800 bg-red-100 rounded-full">
                                     {{ $facility }}
                                 </span>
                             @endforeach
@@ -302,18 +302,18 @@
 
     <!-- Calendar Section -->
     <section class="py-8">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-4 lg:p-6">
+        <div class="px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
+            <div class="p-4 bg-white border border-gray-200 rounded-lg shadow-sm lg:p-6">
                 <div class="mb-6">
-                    <h2 class="text-2xl font-bold text-gray-900 mb-2">Kalender Ketersediaan</h2>
-                    <p class="text-gray-600 mb-3">
+                    <h2 class="mb-2 text-2xl font-bold text-gray-900">Kalender Ketersediaan</h2>
+                    <p class="mb-3 text-gray-600">
                         Lihat jadwal booking untuk ruangan {{ $room->name }}. 
                         Tanggal yang terisi menunjukkan ruangan sudah dibooking.
                     </p>
                     @auth
                         <x-alert type="info" title="Cara Membuat Booking" icon="true" class="mb-4">
                             <div class="space-y-2 text-sm">
-                                <p><strong>Klik tanggal atau drag waktu</strong> untuk membuat booking baru</p>
+                                <p><strong>Klik tanggal</strong> untuk membuat booking baru</p>
                                 <p>Anda akan diarahkan ke halaman booking dengan ruangan yang sudah terpilih</p>
                                 <p>Isi tanggal, waktu, dan detail booking di halaman tersebut</p>
                             </div>
@@ -332,16 +332,16 @@
 
     <!-- Legend -->
     <section class="pb-8">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="bg-gray-100 rounded-lg p-4">
-                <h3 class="text-lg font-semibold text-gray-900 mb-3">Keterangan</h3>
-                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+        <div class="px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
+            <div class="p-4 bg-gray-100 rounded-lg">
+                <h3 class="mb-3 text-lg font-semibold text-gray-900">Keterangan</h3>
+                <div class="grid grid-cols-1 gap-4 sm:grid-cols-3">
                     <div class="flex items-center">
-                        <div class="w-4 h-4 bg-green-500 rounded mr-2"></div>
+                        <div class="w-4 h-4 mr-2 bg-green-500 rounded"></div>
                         <span class="text-sm text-gray-700">Booking Disetujui</span>
                     </div>
                     <div class="flex items-center">
-                        <div class="w-4 h-4 bg-yellow-500 rounded mr-2"></div>
+                        <div class="w-4 h-4 mr-2 bg-yellow-500 rounded"></div>
                         <span class="text-sm text-gray-700">Menunggu Persetujuan</span>
                     </div>
                 </div>
@@ -460,18 +460,18 @@
                     modal.className = 'fixed inset-0 bg-gray-600 bg-opacity-50 z-50 flex items-center justify-center p-4';
                     
                     const statusBadge = props.status === 'approved' 
-                        ? '<span class="px-2 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800">Disetujui</span>'
+                        ? '<span class="px-2 py-1 text-xs font-semibold text-green-800 bg-green-100 rounded-full">Disetujui</span>'
                         : props.status === 'pending'
-                        ? '<span class="px-2 py-1 text-xs font-semibold rounded-full bg-yellow-100 text-yellow-800">Pending</span>'
-                        : '<span class="px-2 py-1 text-xs font-semibold rounded-full bg-red-100 text-red-800">Ditolak</span>';
+                        ? '<span class="px-2 py-1 text-xs font-semibold text-yellow-800 bg-yellow-100 rounded-full">Pending</span>'
+                        : '<span class="px-2 py-1 text-xs font-semibold text-red-800 bg-red-100 rounded-full">Ditolak</span>';
                     
                     modal.innerHTML = `
-                        <div class="bg-white rounded-lg shadow-xl max-w-md w-full transform transition-all duration-300 scale-95 opacity-0">
+                        <div class="w-full max-w-md transition-all duration-300 transform scale-95 bg-white rounded-lg shadow-xl opacity-0">
                             <div class="p-6">
                                 <div class="flex items-center justify-between mb-4">
                                     <div class="flex items-center">
                                         <div class="flex-shrink-0">
-                                            <svg class="h-8 w-8 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <svg class="w-8 h-8 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                                             </svg>
                                         </div>
@@ -481,7 +481,7 @@
                                     </div>
                                     ${statusBadge}
                                 </div>
-                                <div class="space-y-3 mb-6">
+                                <div class="mb-6 space-y-3">
                                     <div class="flex justify-between">
                                         <span class="text-sm font-medium text-gray-500">Judul Acara:</span>
                                         <span class="text-sm text-gray-900">${props.booking_title || 'N/A'}</span>
@@ -505,7 +505,7 @@
                                     ${props.description ? `
                                     <div class="pt-2 border-t border-gray-200">
                                         <span class="text-sm font-medium text-gray-500">Deskripsi:</span>
-                                        <p class="text-sm text-gray-900 mt-1">${props.description}</p>
+                                        <p class="mt-1 text-sm text-gray-900">${props.description}</p>
                                     </div>
                                     ` : ''}
                                     <div class="pt-2 border-t border-gray-200">
@@ -516,7 +516,7 @@
                                     </div>
                                 </div>
                                 <div class="flex justify-end">
-                                    <button class="close-btn px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-colors duration-200">
+                                    <button class="px-4 py-2 font-medium text-white transition-colors duration-200 bg-red-600 rounded-lg close-btn hover:bg-red-700">
                                         Tutup
                                     </button>
                                 </div>

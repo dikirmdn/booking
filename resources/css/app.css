@@ -34,7 +34,7 @@
 
 /* Custom focus styles */
 .focus-ring {
-    @apply focus:outline-none focus:ring-4 focus:ring-blue-500/20 focus:border-blue-500;
+    @apply focus:outline-none focus:ring-4 focus:ring-red-500/20 focus:border-red-500;
 }
 
 /* Smooth transitions */

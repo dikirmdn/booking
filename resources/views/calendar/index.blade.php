@@ -73,8 +73,8 @@
             }
         }
         .fc-button {
-            background-color: #3b82f6 !important;
-            border-color: #3b82f6 !important;
+            background-color: #dc2626 !important;
+            border-color: #dc2626 !important;
             padding: 0.375rem 0.75rem !important;
             border-radius: 0.375rem !important;
             font-weight: 500 !important;
@@ -99,23 +99,23 @@
             }
         }
         .fc-button:hover {
-            background-color: #2563eb !important;
-            border-color: #2563eb !important;
+            background-color: #b91c1c !important;
+            border-color: #b91c1c !important;
         }
         .fc-button-active {
-            background-color: #1d4ed8 !important;
-            border-color: #1d4ed8 !important;
+            background-color: #991b1b !important;
+            border-color: #991b1b !important;
         }
         .fc-today-button {
-            background-color: #10b981 !important;
-            border-color: #10b981 !important;
+            background-color: #dc2626 !important;
+            border-color: #dc2626 !important;
         }
         .fc-today-button:hover {
-            background-color: #059669 !important;
-            border-color: #059669 !important;
+            background-color: #b91c1c !important;
+            border-color: #b91c1c !important;
         }
         .fc-day-today {
-            background-color: #eff6ff !important;
+            background-color: #fef2f2 !important;
         }
         .fc-event {
             border-radius: 0.25rem;
@@ -293,7 +293,7 @@
                                 <div class="flex items-center justify-between mb-4">
                                     <div class="flex items-center">
                                         <div class="flex-shrink-0">
-                                            <svg class="h-8 w-8 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <svg class="h-8 w-8 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                                             </svg>
                                         </div>
@@ -338,7 +338,7 @@
                                     </div>
                                 </div>
                                 <div class="flex justify-end">
-                                    <button class="close-btn px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-colors duration-200">
+                                    <button class="close-btn px-4 py-2 bg-red-600 hover:bg-red-700 text-white font-medium rounded-lg transition-colors duration-200">
                                         Tutup
                                     </button>
                                 </div>

@@ -1,7 +1,7 @@
 <x-guest-layout>
-<div class="text-center mb-8">
-    <h2 class="text-3xl font-bold text-gray-800 mb-2">Sealamat Datang</h2>
-    <p class="text-gray-600">Silakan Login Untuk Mmebuka Fitur Booking</p>
+<div class="mb-8 text-center">
+    <h2 class="mb-2 text-3xl font-bold text-gray-800">Selamat Datang</h2>
+    <p class="text-gray-600">Silakan Login Untuk Membuka Fitur Booking</p>
 </div>
 
 <!-- Session Status -->
@@ -27,12 +27,12 @@
     <!-- Remember Me & Forgot Password
     <div class="flex items-center justify-between">
         <label for="remember_me" class="inline-flex items-center">
-            <input id="remember_me" type="checkbox" class="rounded border-gray-300 text-blue-600 shadow-sm focus:ring-blue-500 focus:ring-offset-0" name="remember">
+            <input id="remember_me" type="checkbox" class="text-blue-600 border-gray-300 rounded shadow-sm focus:ring-blue-500 focus:ring-offset-0" name="remember">
             <span class="ml-2 text-sm text-gray-600">{{ __('Remember me') }}</span>
         </label>
 
         @if (Route::has('password.request'))
-            <a class="text-sm text-blue-600 hover:text-blue-800 font-medium transition-colors duration-200" href="{{ route('password.request') }}">
+            <a class="text-sm font-medium text-blue-600 transition-colors duration-200 hover:text-blue-800" href="{{ route('password.request') }}">
                 {{ __('Forgot password?') }}
             </a>
         @endif
