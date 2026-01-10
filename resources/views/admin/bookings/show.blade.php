@@ -48,11 +48,18 @@
                             </div>
                             <div>
                                 <span class="text-sm font-medium text-gray-500">Waktu Mulai:</span>
-                                <span class="ml-2 text-gray-900">{{ $booking->start_time->format('d M Y H:i') }}</span>
+                                <span class="ml-2 text-gray-900">
+                                    {{ $booking->start_time->format('d M Y') }}
+                                    Pukul {{ $booking->start_time->format('H:i') }}
+                                </span>
                             </div>
+
                             <div>
                                 <span class="text-sm font-medium text-gray-500">Waktu Selesai:</span>
-                                <span class="ml-2 text-gray-900">{{ $booking->end_time->format('d M Y H:i') }}</span>
+                                <span class="ml-2 text-gray-900">
+                                    {{ $booking->end_time->format('d M Y') }}
+                                    Pukul {{ $booking->end_time->format('H:i')}}
+                                </span>
                             </div>
                             <div>
                                 <span class="text-sm font-medium text-gray-500">Status:</span>

@@ -112,6 +112,7 @@
                     
                     {{ $slot }}
                 </main>
+
             </div>
         </div>
 

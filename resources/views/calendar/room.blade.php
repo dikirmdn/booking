@@ -13,7 +13,7 @@
     <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/main.min.css" rel="stylesheet" />
     
     <!-- Scripts -->
-    @vite(['resources/css/app.css', 'resources/css/calendar-id.css', 'resources/js/app.js'])
+    @vite(['resources/css/app.css', 'resources/css/calendar-id.css', 'resources/css/footer.css', 'resources/js/app.js'])
     
     <style>
         .calendar-container {
@@ -43,11 +43,22 @@
         .fc-header-toolbar {
             margin-bottom: 1rem;
             flex-wrap: wrap;
-            gap: 0.5rem;
+            gap: 0.75rem;
         }
         @media (min-width: 640px) {
             .fc-header-toolbar {
                 margin-bottom: 1.5rem;
+                gap: 1rem;
+            }
+        }
+        .fc-toolbar-chunk {
+            display: flex;
+            gap: 0.5rem;
+            align-items: center;
+        }
+        @media (min-width: 640px) {
+            .fc-toolbar-chunk {
+                gap: 0.75rem;
             }
         }
         .fc-toolbar-title {
@@ -73,11 +84,21 @@
             color: white !important;
             font-size: 0.75rem !important;
             line-height: 1.25rem !important;
+            margin: 0 0.125rem !important;
         }
         @media (min-width: 640px) {
             .fc-button {
                 padding: 0.5rem 1rem !important;
                 font-size: 0.875rem !important;
+                margin: 0 0.25rem !important;
+            }
+        }
+        .fc-button-group {
+            gap: 0.25rem;
+        }
+        @media (min-width: 640px) {
+            .fc-button-group {
+                gap: 0.375rem;
             }
         }
         .fc-button:hover {
@@ -105,12 +126,23 @@
             border: none;
             font-size: 0.625rem;
             line-height: 1.2;
+            font-weight: 500;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
         }
         @media (min-width: 640px) {
             .fc-event {
                 padding: 0.25rem 0.5rem;
                 font-size: 0.75rem;
+                white-space: normal;
             }
+        }
+        .fc-event-time {
+            display: none !important; /* Sembunyikan waktu yang ditampilkan FullCalendar */
+        }
+        .fc-event-title {
+            font-weight: 500;
         }
         .fc-daygrid-day {
             border-color: #e5e7eb;
@@ -149,15 +181,20 @@
             .fc-header-toolbar .fc-toolbar-chunk {
                 display: flex;
                 flex-wrap: wrap;
-                gap: 0.25rem;
+                gap: 0.375rem;
             }
             .fc-header-toolbar .fc-button-group {
                 display: flex;
                 flex-wrap: wrap;
+                gap: 0.25rem;
             }
             .fc-prev-button,
             .fc-next-button {
                 padding: 0.375rem 0.5rem !important;
+                margin: 0 0.125rem !important;
+            }
+            .fc-today-button {
+                margin: 0 0.25rem !important;
             }
         }
         
@@ -276,9 +313,9 @@
                     @auth
                         <x-alert type="info" title="Cara Membuat Booking" icon="true" class="mb-4">
                             <div class="space-y-2 text-sm">
-                                <p><strong>Klik tanggal</strong> (tampilan bulan) untuk booking dengan waktu default 09:00</p>
-                                <p><strong>Drag pada slot waktu</strong> (tampilan minggu/hari) untuk memilih durasi spesifik</p>
-                                <p>Ruangan dan waktu akan otomatis terisi di form booking</p>
+                                <p><strong>Klik tanggal atau drag waktu</strong> untuk membuat booking baru</p>
+                                <p>Anda akan diarahkan ke halaman booking dengan ruangan yang sudah terpilih</p>
+                                <p>Isi tanggal, waktu, dan detail booking di halaman tersebut</p>
                             </div>
                         </x-alert>
                     @else
@@ -306,10 +343,6 @@
                     <div class="flex items-center">
                         <div class="w-4 h-4 bg-yellow-500 rounded mr-2"></div>
                         <span class="text-sm text-gray-700">Menunggu Persetujuan</span>
-                    </div>
-                    <div class="flex items-center">
-                        <div class="w-4 h-4 bg-red-500 rounded mr-2"></div>
-                        <span class="text-sm text-gray-700">Booking Ditolak</span>
                     </div>
                 </div>
             </div>
@@ -355,6 +388,9 @@
             const calendar = new FullCalendar.Calendar(calendarEl, {
                 initialView: 'dayGridMonth',
                 locale: 'id',
+                timeZone: 'Asia/Jakarta',
+                displayEventTime: false, // Nonaktifkan tampilan waktu
+                eventDisplay: 'block',
                 buttonText: {
                     today: 'Hari Ini',
                     month: 'Bulan',
@@ -387,11 +423,7 @@
                     }
                 },
                 eventDisplay: 'block',
-                eventTimeFormat: {
-                    hour: '2-digit',
-                    minute: '2-digit',
-                    hour12: false
-                },
+                displayEventTime: false, // Nonaktifkan tampilan waktu default
                 slotMinTime: '07:00:00',
                 slotMaxTime: '22:00:00',
                 slotDuration: '01:00:00',
@@ -415,43 +447,73 @@
                     endTime: '22:00'
                 },
                 eventDidMount: function(info) {
-                    const user = info.event.extendedProps.user || 'N/A';
-                    const description = info.event.extendedProps.description || '';
-                    info.el.setAttribute('title', `${info.event.title}\nPemesan: ${user}${description ? '\nDeskripsi: ' + description : ''}`);
+                    const props = info.event.extendedProps;
+                    const tooltip = `${props.booking_title || info.event.title}\nPemesan: ${props.user}\nWaktu: ${props.start_time}-${props.end_time}`;
+                    info.el.setAttribute('title', tooltip);
                     info.el.style.cursor = 'pointer';
                 },
                 eventClick: function(info) {
-                    const user = info.event.extendedProps.user || 'N/A';
-                    const description = info.event.extendedProps.description || '';
-                    const start = info.event.start ? info.event.start.toLocaleString('id-ID') : 'N/A';
-                    const end = info.event.end ? info.event.end.toLocaleString('id-ID') : 'N/A';
+                    const props = info.event.extendedProps;
                     
-                    let message = `<div class="space-y-2">
-                        <div><strong>Acara:</strong> ${info.event.title}</div>
-                        <div><strong>Pemesan:</strong> ${user}</div>
-                        <div><strong>Waktu:</strong> ${start} - ${end}</div>
-                        ${description ? `<div><strong>Deskripsi:</strong> ${description}</div>` : ''}
-                    </div>`;
-                    
-                    // Create custom modal for event details
+                    // Create detailed modal
                     const modal = document.createElement('div');
                     modal.className = 'fixed inset-0 bg-gray-600 bg-opacity-50 z-50 flex items-center justify-center p-4';
+                    
+                    const statusBadge = props.status === 'approved' 
+                        ? '<span class="px-2 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800">Disetujui</span>'
+                        : props.status === 'pending'
+                        ? '<span class="px-2 py-1 text-xs font-semibold rounded-full bg-yellow-100 text-yellow-800">Pending</span>'
+                        : '<span class="px-2 py-1 text-xs font-semibold rounded-full bg-red-100 text-red-800">Ditolak</span>';
                     
                     modal.innerHTML = `
                         <div class="bg-white rounded-lg shadow-xl max-w-md w-full transform transition-all duration-300 scale-95 opacity-0">
                             <div class="p-6">
-                                <div class="flex items-center mb-4">
-                                    <div class="flex-shrink-0">
-                                        <svg class="h-8 w-8 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                                        </svg>
+                                <div class="flex items-center justify-between mb-4">
+                                    <div class="flex items-center">
+                                        <div class="flex-shrink-0">
+                                            <svg class="h-8 w-8 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                            </svg>
+                                        </div>
+                                        <div class="ml-3">
+                                            <h3 class="text-lg font-semibold text-gray-900">Detail Booking</h3>
+                                        </div>
                                     </div>
-                                    <div class="ml-3">
-                                        <h3 class="text-lg font-semibold text-gray-900">Detail Booking</h3>
-                                    </div>
+                                    ${statusBadge}
                                 </div>
-                                <div class="mb-6">
-                                    ${message}
+                                <div class="space-y-3 mb-6">
+                                    <div class="flex justify-between">
+                                        <span class="text-sm font-medium text-gray-500">Judul Acara:</span>
+                                        <span class="text-sm text-gray-900">${props.booking_title || 'N/A'}</span>
+                                    </div>
+                                    <div class="flex justify-between">
+                                        <span class="text-sm font-medium text-gray-500">Ruangan:</span>
+                                        <span class="text-sm text-gray-900">${props.room}</span>
+                                    </div>
+                                    <div class="flex justify-between">
+                                        <span class="text-sm font-medium text-gray-500">Pemesan:</span>
+                                        <span class="text-sm text-gray-900">${props.user}</span>
+                                    </div>
+                                    <div class="flex justify-between">
+                                        <span class="text-sm font-medium text-gray-500">Tanggal:</span>
+                                        <span class="text-sm text-gray-900">${props.start_date}</span>
+                                    </div>
+                                    <div class="flex justify-between">
+                                        <span class="text-sm font-medium text-gray-500">Waktu:</span>
+                                        <span class="text-sm text-gray-900">${props.start_time} - ${props.end_time}</span>
+                                    </div>
+                                    ${props.description ? `
+                                    <div class="pt-2 border-t border-gray-200">
+                                        <span class="text-sm font-medium text-gray-500">Deskripsi:</span>
+                                        <p class="text-sm text-gray-900 mt-1">${props.description}</p>
+                                    </div>
+                                    ` : ''}
+                                    <div class="pt-2 border-t border-gray-200">
+                                        <div class="flex justify-between">
+                                            <span class="text-sm font-medium text-gray-500">Dibuat:</span>
+                                            <span class="text-sm text-gray-900">${props.created_at}</span>
+                                        </div>
+                                    </div>
                                 </div>
                                 <div class="flex justify-end">
                                     <button class="close-btn px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-colors duration-200">
@@ -488,123 +550,23 @@
                 },
                 dateClick: function(info) {
                     @auth
-                        const selectedDate = info.dateStr;
-                        const now = new Date();
-                        const clickedDate = new Date(selectedDate);
-                        
-                        // Check if clicked date is in the past
-                        if (clickedDate < now.setHours(0,0,0,0)) {
-                            Alert.warning('Tidak dapat membuat booking untuk tanggal yang sudah lewat.', {
-                                title: 'Tanggal Tidak Valid'
-                            });
-                            return;
-                        }
-                        
-                        // Show time selection modal or redirect with default time
-                        const defaultTime = '09:00';
-                        const bookingUrl = '{{ route("user.bookings.create") }}?room_id={{ $room->id }}&date=' + selectedDate + '&time=' + defaultTime;
-                        
-                        confirmAction(
-                            'Buat booking untuk tanggal ' + selectedDate + ' pukul ' + defaultTime + '?\n\nAnda dapat mengubah waktu di halaman booking.',
-                            {
-                                title: 'Konfirmasi Booking',
-                                confirmText: 'Buat Booking',
-                                cancelText: 'Batal',
-                                type: 'info'
-                            }
-                        ).then((confirmed) => {
-                            if (confirmed) {
-                                window.location.href = bookingUrl;
-                            }
-                        });
+                        // Langsung redirect ke halaman booking dengan room_id saja
+                        const bookingUrl = '{{ route("user.bookings.create") }}?room_id={{ $room->id }}';
+                        window.location.href = bookingUrl;
                     @else
-                        confirmAction(
-                            'Anda perlu login untuk membuat booking. Login sekarang?',
-                            {
-                                title: 'Login Diperlukan',
-                                confirmText: 'Login',
-                                cancelText: 'Batal',
-                                type: 'info'
-                            }
-                        ).then((confirmed) => {
-                            if (confirmed) {
-                                window.location.href = '{{ route("login") }}';
-                            }
-                        });
+                        // Redirect ke login jika belum login
+                        window.location.href = '{{ route("login") }}';
                     @endauth
                 },
                 select: function(info) {
                     @auth
-                        const startDate = info.start;
-                        const endDate = info.end;
-                        const now = new Date();
-                        
-                        // Check if selected date is in the past
-                        if (startDate < now) {
-                            Alert.warning('Tidak dapat membuat booking untuk waktu yang sudah lewat.', {
-                                title: 'Waktu Tidak Valid'
-                            });
-                            calendar.unselect();
-                            return;
-                        }
-                        
-                        // Format date and time for URL
-                        const year = startDate.getFullYear();
-                        const month = String(startDate.getMonth() + 1).padStart(2, '0');
-                        const day = String(startDate.getDate()).padStart(2, '0');
-                        const hours = String(startDate.getHours()).padStart(2, '0');
-                        const minutes = String(startDate.getMinutes()).padStart(2, '0');
-                        
-                        const dateStr = `${year}-${month}-${day}`;
-                        const timeStr = `${hours}:${minutes}`;
-                        
-                        // Use default time if clicked on dayGrid (all-day)
-                        const finalTimeStr = info.allDay ? '09:00' : timeStr;
-                        
-                        // Calculate duration for better UX
-                        let durationText = '';
-                        if (!info.allDay && endDate) {
-                            const duration = Math.round((endDate - startDate) / (1000 * 60)); // minutes
-                            if (duration >= 60) {
-                                const hours = Math.floor(duration / 60);
-                                const mins = duration % 60;
-                                durationText = ` (durasi: ${hours}h${mins > 0 ? ' ' + mins + 'm' : ''})`;
-                            } else {
-                                durationText = ` (durasi: ${duration}m)`;
-                            }
-                        }
-                        
-                        const bookingUrl = '{{ route("user.bookings.create") }}?room_id={{ $room->id }}&date=' + dateStr + '&time=' + finalTimeStr;
-                        
-                        confirmAction(
-                            'Buat booking untuk tanggal ' + dateStr + ' pukul ' + finalTimeStr + durationText + '?',
-                            {
-                                title: 'Konfirmasi Booking',
-                                confirmText: 'Buat Booking',
-                                cancelText: 'Batal',
-                                type: 'info'
-                            }
-                        ).then((confirmed) => {
-                            if (confirmed) {
-                                window.location.href = bookingUrl;
-                            }
-                        });
-                        
+                        // Langsung redirect ke halaman booking dengan room_id saja
+                        const bookingUrl = '{{ route("user.bookings.create") }}?room_id={{ $room->id }}';
+                        window.location.href = bookingUrl;
                         calendar.unselect();
                     @else
-                        confirmAction(
-                            'Anda perlu login untuk membuat booking. Login sekarang?',
-                            {
-                                title: 'Login Diperlukan',
-                                confirmText: 'Login',
-                                cancelText: 'Batal',
-                                type: 'info'
-                            }
-                        ).then((confirmed) => {
-                            if (confirmed) {
-                                window.location.href = '{{ route("login") }}';
-                            }
-                        });
+                        // Redirect ke login jika belum login
+                        window.location.href = '{{ route("login") }}';
                         calendar.unselect();
                     @endauth
                 }
@@ -625,5 +587,8 @@
             });
         });
     </script>
+
+    <!-- Footer -->
+    <x-footer />
 </body>
 </html>

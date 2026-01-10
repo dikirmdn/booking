@@ -6,14 +6,23 @@ use App\Http\Controllers\Controller;
 use App\Models\Booking;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class BookingController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $bookings = Booking::with(['room', 'user'])
-            ->latest()
-            ->paginate(15);
+        $query = Booking::with(['room', 'user']);
+        
+        // Filter berdasarkan bulan jika ada
+        if ($request->filled('month') && $request->filled('year')) {
+            $month = $request->month;
+            $year = $request->year;
+            $query->whereMonth('start_time', $month)
+                  ->whereYear('start_time', $year);
+        }
+        
+        $bookings = $query->latest()->paginate(15);
 
         return view('admin.bookings.index', compact('bookings'));
     }
@@ -137,5 +146,44 @@ class BookingController extends Controller
 
         return redirect()->route('admin.bookings.index')
             ->with('toast_success', 'Booking berhasil dihapus.');
+    }
+
+    public function downloadReport(Request $request)
+    {
+        $query = Booking::with(['room', 'user']);
+        
+        $title = 'Laporan Booking';
+        $period = 'Semua Data';
+        
+        // Filter berdasarkan bulan jika ada
+        if ($request->filled('month') && $request->filled('year')) {
+            $month = $request->month;
+            $year = $request->year;
+            $query->whereMonth('start_time', $month)
+                  ->whereYear('start_time', $year);
+            
+            $monthName = Carbon::create($year, $month, 1)->format('F Y');
+            $period = $monthName;
+            $title = "Laporan Booking - {$monthName}";
+        }
+        
+        $bookings = $query->orderBy('start_time', 'desc')->get();
+        
+        // Statistik
+        $stats = [
+            'total' => $bookings->count(),
+            'approved' => $bookings->where('status', 'approved')->count(),
+            'pending' => $bookings->where('status', 'pending')->count(),
+            'rejected' => $bookings->where('status', 'rejected')->count(),
+            'cancelled' => $bookings->where('status', 'cancelled')->count(),
+        ];
+        
+        $pdf = Pdf::loadView('admin.bookings.report-pdf', compact('bookings', 'stats', 'title', 'period'));
+        
+        $filename = 'laporan-booking-' . ($request->filled('month') && $request->filled('year') 
+            ? $request->year . '-' . str_pad($request->month, 2, '0', STR_PAD_LEFT)
+            : 'semua') . '.pdf';
+            
+        return $pdf->download($filename);
     }
 }

@@ -19,6 +19,73 @@
         </div>
     @endif
 
+    <!-- Filter dan Download Section -->
+    <div class="bg-white rounded-lg shadow-sm border border-gray-200 mb-6">
+        <div class="p-4 sm:p-6">
+            <h3 class="text-lg font-semibold text-gray-900 mb-4">Filter & Download Laporan</h3>
+            
+            <form method="GET" action="{{ route('admin.bookings.index') }}" class="flex flex-wrap gap-4 items-end">
+                <div class="flex-1 min-w-[200px]">
+                    <label for="month" class="block text-sm font-medium text-gray-700 mb-1">Bulan</label>
+                    <select name="month" id="month" class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                        <option value="">Semua Bulan</option>
+                        @for($i = 1; $i <= 12; $i++)
+                            <option value="{{ $i }}" {{ request('month') == $i ? 'selected' : '' }}>
+                                {{ Carbon\Carbon::create(null, $i, 1)->format('F') }}
+                            </option>
+                        @endfor
+                    </select>
+                </div>
+                
+                <div class="flex-1 min-w-[150px]">
+                    <label for="year" class="block text-sm font-medium text-gray-700 mb-1">Tahun</label>
+                    <select name="year" id="year" class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                        <option value="">Semua Tahun</option>
+                        @for($year = now()->year; $year >= now()->year - 5; $year--)
+                            <option value="{{ $year }}" {{ request('year') == $year ? 'selected' : '' }}>
+                                {{ $year }}
+                            </option>
+                        @endfor
+                    </select>
+                </div>
+                
+                <div class="flex gap-2">
+                    <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
+                        Filter
+                    </button>
+                    
+                    <a href="{{ route('admin.bookings.index') }}" class="px-4 py-2 bg-gray-600 text-white rounded-md hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2">
+                        Reset
+                    </a>
+                </div>
+            </form>
+            
+            <div class="mt-4 pt-4 border-t border-gray-200">
+                <div class="flex flex-wrap gap-2">
+                    <!-- Download Semua Data -->
+                    <a href="{{ route('admin.bookings.download-report') }}" 
+                       class="inline-flex items-center px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2">
+                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                        </svg>
+                        Download Semua Data
+                    </a>
+                    
+                    <!-- Download Data Terfilter -->
+                    @if(request('month') && request('year'))
+                        <a href="{{ route('admin.bookings.download-report', ['month' => request('month'), 'year' => request('year')]) }}" 
+                           class="inline-flex items-center px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+                            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                            </svg>
+                            Download {{ Carbon\Carbon::create(request('year'), request('month'), 1)->format('F Y') }}
+                        </a>
+                    @endif
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
         <div class="p-4 sm:p-6">
                     <!-- Mobile Card View -->

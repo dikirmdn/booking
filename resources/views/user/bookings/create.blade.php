@@ -65,6 +65,17 @@
             const startTimeInput = document.getElementById('start_time');
             const endTimeInput = document.getElementById('end_time');
             
+            // Set minimum datetime to current time
+            const now = new Date();
+            const year = now.getFullYear();
+            const month = String(now.getMonth() + 1).padStart(2, '0');
+            const day = String(now.getDate()).padStart(2, '0');
+            const hours = String(now.getHours()).padStart(2, '0');
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            
+            const currentDateTime = `${year}-${month}-${day}T${hours}:${minutes}`;
+            startTimeInput.min = currentDateTime;
+            
             // Auto-set end time when start time changes (add 1 hour by default)
             startTimeInput.addEventListener('change', function() {
                 if (this.value && !endTimeInput.value) {
@@ -80,25 +91,14 @@
                     
                     endTimeInput.value = `${year}-${month}-${day}T${hours}:${minutes}`;
                 }
+                
+                // Update minimum end time to be after start time
+                if (this.value) {
+                    endTimeInput.min = this.value;
+                }
             });
             
-            // If start time is already set (from URL parameters), trigger the change event
-            if (startTimeInput.value && !endTimeInput.value) {
-                startTimeInput.dispatchEvent(new Event('change'));
-            }
-            
-            // Add visual feedback for pre-filled fields
-            if (startTimeInput.value) {
-                startTimeInput.style.backgroundColor = '#f0f9ff';
-                startTimeInput.style.borderColor = '#0ea5e9';
-                
-                // Add a small notice
-                const notice = document.createElement('p');
-                notice.className = 'text-sm text-blue-600 mt-1';
-                notice.textContent = 'Waktu mulai telah diatur dari kalender';
-                startTimeInput.parentNode.appendChild(notice);
-            }
-            
+            // Add visual feedback for pre-filled room selection
             const roomSelect = document.getElementById('room_id');
             if (roomSelect.value) {
                 roomSelect.style.backgroundColor = '#f0f9ff';

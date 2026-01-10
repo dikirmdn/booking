@@ -25,6 +25,15 @@
                         <button onclick="document.getElementById('resetPasswordModal').classList.remove('hidden')" class="bg-yellow-600 hover:bg-yellow-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors duration-200">
                             Reset Password
                         </button>
+                        @if($user->id !== auth()->id())
+                            <form method="POST" action="{{ route('admin.users.destroy', $user) }}" class="inline delete-user-form">
+                                @csrf
+                                @method('DELETE')
+                                <button type="button" class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors duration-200 delete-user-btn" data-user-name="{{ $user->name }}" data-bookings-count="{{ $user->bookings->count() }}">
+                                    Hapus User
+                                </button>
+                            </form>
+                        @endif
                     </div>
                 </div>
 
@@ -34,12 +43,26 @@
                         <p class="mt-1 text-sm text-gray-900">{{ $user->name }}</p>
                     </div>
                     <div>
+                        <label class="block text-sm font-medium text-gray-500">Username</label>
+                        <p class="mt-1 text-sm text-gray-900">{{ $user->username }}</p>
+                    </div>
+                    <div>
                         <label class="block text-sm font-medium text-gray-500">Email</label>
                         <p class="mt-1 text-sm text-gray-900">{{ $user->email }}</p>
                     </div>
                     <div>
                         <label class="block text-sm font-medium text-gray-500">Role</label>
-                        <p class="mt-1 text-sm text-gray-900">{{ ucfirst($user->role) }}</p>
+                        <p class="mt-1 text-sm text-gray-900">
+                            @if($user->role === 'admin')
+                                <span class="px-2 py-1 text-xs font-semibold rounded-full bg-purple-100 text-purple-800">
+                                    Admin
+                                </span>
+                            @else
+                                <span class="px-2 py-1 text-xs font-semibold rounded-full bg-gray-100 text-gray-800">
+                                    User
+                                </span>
+                            @endif
+                        </p>
                     </div>
                     <div>
                         <label class="block text-sm font-medium text-gray-500">Bergabung</label>
@@ -167,4 +190,47 @@
             </div>
         </div>
     </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Handle delete user confirmation
+            const deleteButton = document.querySelector('.delete-user-btn');
+            
+            if (deleteButton) {
+                deleteButton.addEventListener('click', async function(e) {
+                    e.preventDefault();
+                    
+                    const userName = this.getAttribute('data-user-name');
+                    const bookingsCount = parseInt(this.getAttribute('data-bookings-count'));
+                    const form = this.closest('.delete-user-form');
+                    
+                    let message = `Apakah Anda yakin ingin menghapus user "${userName}"?`;
+                    
+                    if (bookingsCount > 0) {
+                        message += `\n\nPeringatan: User ini memiliki ${bookingsCount} booking aktif yang akan ikut terhapus secara permanen.`;
+                    } else {
+                        message += `\n\nUser ini tidak memiliki booking aktif.`;
+                    }
+                    
+                    // Use the enhanced confirm dialog if available, otherwise fallback to native confirm
+                    let confirmed = false;
+                    
+                    if (typeof confirmAction === 'function') {
+                        confirmed = await confirmAction(message, {
+                            title: 'Konfirmasi Hapus User',
+                            confirmText: 'Ya, Hapus',
+                            cancelText: 'Batal',
+                            type: 'warning'
+                        });
+                    } else {
+                        confirmed = confirm(message);
+                    }
+                    
+                    if (confirmed) {
+                        form.submit();
+                    }
+                });
+            }
+        });
+    </script>
 </x-app-layout>

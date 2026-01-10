@@ -78,5 +78,35 @@
             </div>
         </form>
     </div>
-</x-app-layout>
 
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const startTimeInput = document.getElementById('start_time');
+            const endTimeInput = document.getElementById('end_time');
+            
+            // Set minimum datetime to current time
+            const now = new Date();
+            const year = now.getFullYear();
+            const month = String(now.getMonth() + 1).padStart(2, '0');
+            const day = String(now.getDate()).padStart(2, '0');
+            const hours = String(now.getHours()).padStart(2, '0');
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            
+            const currentDateTime = `${year}-${month}-${day}T${hours}:${minutes}`;
+            startTimeInput.min = currentDateTime;
+            
+            // Auto-set end time when start time changes (add 1 hour by default)
+            startTimeInput.addEventListener('change', function() {
+                // Update minimum end time to be after start time
+                if (this.value) {
+                    endTimeInput.min = this.value;
+                }
+            });
+            
+            // Set initial minimum for end time if start time already has value
+            if (startTimeInput.value) {
+                endTimeInput.min = startTimeInput.value;
+            }
+        });
+    </script>
+</x-app-layout>

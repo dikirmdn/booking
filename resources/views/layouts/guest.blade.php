@@ -38,13 +38,6 @@
                         </div>
                     </div>
                 </div>
-
-                <!-- Footer -->
-                <div class="mt-8 text-center">
-                    <p class="text-sm text-gray-500">
-                        © {{ date('Y') }} {{ config('app.name', 'DSI') }}. All rights reserved.
-                    </p>
-                </div>
             </div>
         </div>
     </body>

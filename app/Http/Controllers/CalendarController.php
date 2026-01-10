@@ -19,24 +19,7 @@ class CalendarController extends Controller
     {
         $room = Room::where('is_active', true)->findOrFail($roomId);
         
-        // Get bookings for this specific room
-        $bookings = Booking::where('status', 'approved')
-            ->where('room_id', $roomId)
-            ->with(['room', 'user'])
-            ->get()
-            ->map(function ($booking) {
-                return [
-                    'id' => $booking->id,
-                    'title' => $booking->title,
-                    'room' => $booking->room->name,
-                    'user' => $booking->user->name,
-                    'start' => $booking->start_time->toIso8601String(),
-                    'end' => $booking->end_time->toIso8601String(),
-                    'status' => $booking->status,
-                ];
-            });
-
-        return view('calendar.room', compact('room', 'bookings'));
+        return view('calendar.room', compact('room'));
     }
 
     public function api(Request $request)
@@ -45,7 +28,7 @@ class CalendarController extends Controller
         $end = $request->input('end');
         $roomId = $request->input('room_id');
 
-        $query = Booking::where('status', 'approved')
+        $query = Booking::whereIn('status', ['approved', 'pending'])
             ->with(['room', 'user']);
 
         if ($roomId) {
@@ -65,16 +48,30 @@ class CalendarController extends Controller
 
         $bookings = $query->get()
             ->map(function ($booking) {
+                // Pastikan timezone yang benar
+                $startTime = $booking->start_time->setTimezone('Asia/Jakarta');
+                $endTime = $booking->end_time->setTimezone('Asia/Jakarta');
+                
                 return [
                     'id' => $booking->id,
-                    'title' => $booking->title . ' - ' . $booking->room->name,
-                    'start' => $booking->start_time->toIso8601String(),
-                    'end' => $booking->end_time->toIso8601String(),
+                    'title' => "{$startTime->format('H:i')}-{$endTime->format('H:i')} {$booking->user->name}",
+                    'start' => $startTime->toISOString(),
+                    'end' => $endTime->toISOString(),
                     'backgroundColor' => $this->getStatusColor($booking->status),
+                    'borderColor' => $this->getStatusColor($booking->status),
+                    'textColor' => '#ffffff',
+                    'displayEventTime' => false, // Nonaktifkan tampilan waktu default FullCalendar
                     'extendedProps' => [
+                        'booking_id' => $booking->id,
+                        'booking_title' => $booking->title,
                         'room' => $booking->room->name,
                         'user' => $booking->user->name,
                         'description' => $booking->description ?? '',
+                        'status' => $booking->status,
+                        'start_time' => $startTime->format('H:i'),
+                        'end_time' => $endTime->format('H:i'),
+                        'start_date' => $startTime->format('d M Y'),
+                        'created_at' => $booking->created_at->setTimezone('Asia/Jakarta')->format('d M Y H:i'),
                     ],
                 ];
             });

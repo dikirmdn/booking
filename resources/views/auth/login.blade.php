@@ -10,11 +10,11 @@
 <form method="POST" action="{{ route('login') }}" class="space-y-6">
     @csrf
 
-    <!-- Email Address -->
+    <!-- Username -->
     <div>
-        <x-input-label for="email" :value="__('Email')" />
-        <x-text-input id="email" type="email" name="email" :value="old('email')" required autofocus autocomplete="username" placeholder="Masukkan email anda" />
-        <x-input-error :messages="$errors->get('email')" class="mt-2" />
+        <x-input-label for="username" :value="__('Username')" />
+        <x-text-input id="username" type="text" name="username" :value="old('username')" required autofocus autocomplete="username" placeholder="Masukkan username anda" />
+        <x-input-error :messages="$errors->get('username')" class="mt-2" />
     </div>
 
     <!-- Password -->

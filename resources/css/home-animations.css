@@ -1,0 +1,337 @@
+/* Home Page Animations */
+
+/* Keyframes for animations */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeInLeft {
+    from {
+        opacity: 0;
+        transform: translateX(-30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes fadeInRight {
+    from {
+        opacity: 0;
+        transform: translateX(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes slideInScale {
+    from {
+        opacity: 0;
+        transform: scale(0.9) translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+}
+
+/* Hero Section Animations */
+.hero-content {
+    opacity: 0;
+    animation: fadeInLeft 0.8s ease-out 0.2s forwards;
+}
+
+.hero-title {
+    opacity: 0;
+    animation: fadeInUp 0.8s ease-out 0.4s forwards;
+}
+
+.hero-description {
+    opacity: 0;
+    animation: fadeInUp 0.8s ease-out 0.6s forwards;
+}
+
+.hero-buttons {
+    opacity: 0;
+    animation: fadeInUp 0.8s ease-out 0.8s forwards;
+}
+
+.hero-image {
+    opacity: 0;
+    animation: fadeInRight 1s ease-out 0.5s forwards;
+}
+
+.hero-building {
+    opacity: 0;
+    animation: slideInScale 1.2s ease-out 0.7s forwards;
+}
+
+.hero-building-bg {
+    opacity: 0;
+    animation: fadeIn 1s ease-out 0.9s forwards;
+}
+
+/* Room Section Animations */
+.rooms-header {
+    opacity: 0;
+    animation: fadeInUp 0.8s ease-out forwards;
+}
+
+.room-card {
+    opacity: 0;
+    animation: fadeInUp 0.6s ease-out forwards;
+}
+
+/* Staggered animation for room cards */
+.room-card:nth-child(1) {
+    animation-delay: 0.1s;
+}
+
+.room-card:nth-child(2) {
+    animation-delay: 0.2s;
+}
+
+.room-card:nth-child(3) {
+    animation-delay: 0.3s;
+}
+
+.room-card:nth-child(4) {
+    animation-delay: 0.4s;
+}
+
+.room-card:nth-child(5) {
+    animation-delay: 0.5s;
+}
+
+.room-card:nth-child(6) {
+    animation-delay: 0.6s;
+}
+
+/* Header Animation */
+.header-animate {
+    opacity: 0;
+    animation: fadeInUp 0.6s ease-out 0.1s forwards;
+}
+
+/* Enhanced hover effects for animated elements */
+.hero-building:hover {
+    transform: scale(1.02) rotate(-1deg);
+    transition: transform 0.3s ease;
+}
+
+.room-card:hover {
+    transform: translateY(-8px) scale(1.02);
+    transition: all 0.3s ease;
+}
+
+/* Smooth scroll behavior */
+html {
+    scroll-behavior: smooth;
+}
+
+/* Loading state - hide elements initially */
+.animate-on-load {
+    opacity: 0;
+}
+
+/* Intersection Observer animations for better performance */
+.fade-in-observer {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+.fade-in-observer.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Mobile responsive animations */
+@media (max-width: 768px) {
+    .hero-content,
+    .hero-image {
+        animation-duration: 0.6s;
+    }
+    
+    .room-card {
+        animation-duration: 0.5s;
+    }
+}
+
+/* Reduced motion for accessibility */
+@media (prefers-reduced-motion: reduce) {
+    * {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+
+/* Additional animation enhancements */
+
+/* Floating animation for building windows */
+@keyframes float {
+    0%, 100% {
+        transform: translateY(0px);
+    }
+    50% {
+        transform: translateY(-5px);
+    }
+}
+
+.hero-building .bg-yellow-300\/40 {
+    animation: float 3s ease-in-out infinite;
+}
+
+.hero-building .bg-yellow-300\/40:nth-child(odd) {
+    animation-delay: 0.5s;
+}
+
+.hero-building .bg-yellow-300\/40:nth-child(even) {
+    animation-delay: 1s;
+}
+
+/* Pulse animation for status badges */
+@keyframes pulse-glow {
+    0%, 100% {
+        box-shadow: 0 0 5px rgba(34, 197, 94, 0.5);
+    }
+    50% {
+        box-shadow: 0 0 15px rgba(34, 197, 94, 0.8);
+    }
+}
+
+.status-available {
+    animation: pulse-glow 2s ease-in-out infinite;
+}
+
+/* Stagger animation for facility badges */
+.facility-badge {
+    opacity: 0;
+    animation: fadeInUp 0.4s ease-out forwards;
+}
+
+.facility-badge:nth-child(1) { animation-delay: 0.1s; }
+.facility-badge:nth-child(2) { animation-delay: 0.2s; }
+.facility-badge:nth-child(3) { animation-delay: 0.3s; }
+.facility-badge:nth-child(4) { animation-delay: 0.4s; }
+.facility-badge:nth-child(5) { animation-delay: 0.5s; }
+
+/* Arrow bounce animation */
+@keyframes bounceRight {
+    0%, 20%, 50%, 80%, 100% {
+        transform: translateX(0);
+    }
+    40% {
+        transform: translateX(5px);
+    }
+    60% {
+        transform: translateX(3px);
+    }
+}
+
+.room-card:hover .arrow-animate {
+    animation: bounceRight 1s ease-in-out infinite;
+}
+
+/* Calendar icon rotation on hover */
+.room-card:hover .calendar-mini-icon {
+    transform: rotate(5deg) scale(1.1);
+    transition: transform 0.3s ease;
+}
+
+/* Room icon slide animation */
+.room-card:hover .room-icon {
+    transform: translateX(-5px) translateY(-5px);
+    transition: transform 0.3s ease;
+}
+
+/* Enhanced building hover effect */
+.hero-building:hover .bg-white\/20 {
+    background-color: rgba(255, 255, 255, 0.4);
+    transition: background-color 0.3s ease;
+}
+
+/* Loading spinner for better UX */
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.loading-spinner {
+    animation: spin 1s linear infinite;
+}
+
+/* Gradient text animation */
+@keyframes gradient-shift {
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+.gradient-text {
+    background: linear-gradient(-45deg, #ef4444, #dc2626, #b91c1c, #991b1b);
+    background-size: 400% 400%;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: gradient-shift 3s ease infinite;
+}
+
+/* Capacity highlight pulse */
+.capacity-highlight {
+    animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+    0%, 100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.7;
+    }
+}
+
+/* Performance optimizations */
+.hero-building,
+.room-card,
+.facility-badge {
+    will-change: transform, opacity;
+}
+
+/* Dark mode support (if needed) */
+@media (prefers-color-scheme: dark) {
+    .gradient-text {
+        background: linear-gradient(-45deg, #fca5a5, #f87171, #ef4444, #dc2626);
+        background-size: 400% 400%;
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+}

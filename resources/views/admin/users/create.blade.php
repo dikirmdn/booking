@@ -25,11 +25,30 @@
                         <x-input-error :messages="$errors->get('name')" class="mt-2" />
                     </div>
 
+                    <!-- Username -->
+                    <div>
+                        <x-input-label for="username" :value="__('Username')" />
+                        <x-text-input id="username" type="text" name="username" :value="old('username')" required autocomplete="username" placeholder="Masukkan username" />
+                        <x-input-error :messages="$errors->get('username')" class="mt-2" />
+                        <p class="mt-1 text-sm text-gray-500">Username harus unik dan akan digunakan untuk login</p>
+                    </div>
+
                     <!-- Email Address -->
                     <div>
                         <x-input-label for="email" :value="__('Email')" />
-                        <x-text-input id="email" type="email" name="email" :value="old('email')" required autocomplete="username" placeholder="Masukkan alamat email" />
+                        <x-text-input id="email" type="email" name="email" :value="old('email')" required autocomplete="email" placeholder="Masukkan alamat email" />
                         <x-input-error :messages="$errors->get('email')" class="mt-2" />
+                    </div>
+
+                    <!-- Role -->
+                    <div>
+                        <x-input-label for="role" :value="__('Role')" />
+                        <select id="role" name="role" class="mt-1 block w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm">
+                            <option value="user" {{ old('role', 'user') === 'user' ? 'selected' : '' }}>User</option>
+                            <option value="admin" {{ old('role') === 'admin' ? 'selected' : '' }}>Admin</option>
+                        </select>
+                        <x-input-error :messages="$errors->get('role')" class="mt-2" />
+                        <p class="mt-1 text-sm text-gray-500">Admin memiliki akses penuh ke sistem, User hanya dapat membuat booking</p>
                     </div>
 
                     <!-- Password -->
@@ -57,7 +76,7 @@
                             </div>
                             <div class="ml-3">
                                 <p class="text-sm text-blue-700">
-                                    User baru akan dibuat dengan role "user" dan dapat langsung login menggunakan email dan password yang dibuat.
+                                    User baru akan dibuat dengan role yang dipilih dan dapat langsung login menggunakan username dan password yang dibuat.
                                 </p>
                             </div>
                         </div>

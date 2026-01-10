@@ -1,0 +1,82 @@
+
+.footer-gradient {
+    background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 50%, #f1f5f9 100%);
+    border-top: 1px solid #e2e8f0;
+}
+
+.footer-pattern {
+    background-image: 
+        radial-gradient(circle at 25% 25%, rgba(239, 68, 68, 0.03) 0%, transparent 50%),
+        radial-gradient(circle at 75% 75%, rgba(239, 68, 68, 0.02) 0%, transparent 50%);
+}
+
+.footer-link-hover {
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.footer-link-hover::after {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 2px;
+    bottom: -2px;
+    left: 0;
+    background-color: #ef4444;
+    transition: width 0.3s ease;
+}
+
+.footer-link-hover:hover::after {
+    width: 100%;
+}
+
+.social-icon-hover {
+    transition: all 0.3s ease;
+    transform: translateY(0);
+}
+
+.social-icon-hover:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(239, 68, 68, 0.2);
+}
+
+.footer-logo-glow {
+    box-shadow: 0 0 15px rgba(239, 68, 68, 0.2);
+}
+
+@media (max-width: 768px) {
+    .footer-responsive-text {
+        font-size: 0.875rem;
+        line-height: 1.25rem;
+    }
+}
+
+/* Animation untuk footer saat load */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.footer-animate {
+    animation: fadeInUp 0.8s ease-out;
+}
+
+/* Pulse animation untuk status indicator */
+@keyframes pulse-red {
+    0%, 100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.5;
+    }
+}
+
+.pulse-red {
+    animation: pulse-red 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}

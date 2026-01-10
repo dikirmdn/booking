@@ -24,22 +24,11 @@ class BookingController extends Controller
     {
         $rooms = Room::where('is_active', true)->get();
         
-        // Get parameters from URL
+        // Hanya ambil room_id dari parameter URL
         $selectedRoomId = $request->get('room_id');
-        $selectedDate = $request->get('date');
-        $selectedTime = $request->get('time');
         
-        // Prepare default values
+        // Tidak mengambil date dan time dari URL, biarkan kosong
         $defaultStartTime = null;
-        if ($selectedDate) {
-            if ($selectedTime) {
-                // If specific time is provided, use it
-                $defaultStartTime = $selectedDate . 'T' . $selectedTime;
-            } else {
-                // If only date is provided, set default time to 09:00
-                $defaultStartTime = $selectedDate . 'T09:00';
-            }
-        }
         
         return view('user.bookings.create', compact('rooms', 'selectedRoomId', 'defaultStartTime'));
     }
@@ -50,9 +39,18 @@ class BookingController extends Controller
             'room_id' => 'required|exists:rooms,id',
             'title' => 'required|string|max:255',
             'description' => 'nullable|string',
-            'start_time' => 'required|date|after:now',
+            'start_time' => 'required|date',
             'end_time' => 'required|date|after:start_time',
         ]);
+
+        // Custom validation untuk start_time - harus di masa depan atau hari ini dengan jam belum terlewat
+        $startTime = Carbon::parse($validated['start_time']);
+        $now = Carbon::now();
+        
+        if ($startTime->isPast()) {
+            return back()->with('toast_error', 'Waktu mulai tidak boleh di masa lalu.')
+                        ->withInput();
+        }
 
         // Check for conflicts - hanya cek booking yang sudah approved
         // User bisa booking di waktu yang sama selama status masih pending
@@ -134,9 +132,18 @@ class BookingController extends Controller
             'room_id' => 'required|exists:rooms,id',
             'title' => 'required|string|max:255',
             'description' => 'nullable|string',
-            'start_time' => 'required|date|after:now',
+            'start_time' => 'required|date',
             'end_time' => 'required|date|after:start_time',
         ]);
+
+        // Custom validation untuk start_time - harus di masa depan atau hari ini dengan jam belum terlewat
+        $startTime = Carbon::parse($validated['start_time']);
+        $now = Carbon::now();
+        
+        if ($startTime->isPast()) {
+            return back()->with('toast_error', 'Waktu mulai tidak boleh di masa lalu.')
+                        ->withInput();
+        }
 
         // Check for conflicts (excluding current booking)
         // Hanya cek booking yang sudah approved, user bisa booking di waktu yang sama selama status masih pending
