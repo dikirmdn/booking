@@ -20,11 +20,14 @@
         <div class="p-4 sm:p-6">
             <!-- Mobile Card View -->
             <div class="block md:hidden space-y-4">
-                @forelse($rooms as $room)
+                @forelse($rooms as $index => $room)
                 <div class="bg-gray-50 rounded-lg p-4 border border-gray-200">
                     <div class="space-y-2">
                         <div class="flex items-center justify-between">
-                            <h3 class="font-semibold text-gray-900">{{ $room->name }}</h3>
+                            <div class="flex items-center space-x-2">
+                                <span class="inline-flex items-center justify-center w-6 h-6 text-xs font-semibold text-white bg-red-500 rounded-full">{{ $index + 1 }}</span>
+                                <h3 class="font-semibold text-gray-900">{{ $room->name }}</h3>
+                            </div>
                             @if($room->is_active)
                                 <span class="px-2 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800">Aktif</span>
                             @else
@@ -65,6 +68,7 @@
                 <table class="min-w-full divide-y divide-gray-200">
                     <thead class="bg-gray-50">
                         <tr>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">No.</th>
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nama</th>
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Kapasitas</th>
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Fasilitas</th>
@@ -73,8 +77,9 @@
                         </tr>
                     </thead>
                     <tbody class="bg-white divide-y divide-gray-200">
-                        @forelse($rooms as $room)
+                        @forelse($rooms as $index => $room)
                         <tr class="hover:bg-gray-50">
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{{ $index + 1 }}</td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{{ $room->name }}</td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ $room->capacity }} orang</td>
                             <td class="px-6 py-4 text-sm text-gray-900">
@@ -105,7 +110,7 @@
                         </tr>
                         @empty
                         <tr>
-                            <td colspan="5" class="px-6 py-4 text-center text-sm text-gray-500">Tidak ada ruangan</td>
+                            <td colspan="6" class="px-6 py-4 text-center text-sm text-gray-500">Tidak ada ruangan</td>
                         </tr>
                         @endforelse
                     </tbody>
