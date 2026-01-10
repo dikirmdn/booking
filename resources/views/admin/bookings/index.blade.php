@@ -24,39 +24,83 @@
         <div class="p-4 sm:p-6">
             <h3 class="text-lg font-semibold text-gray-900 mb-4">Filter & Download Laporan</h3>
             
-            <form method="GET" action="{{ route('admin.bookings.index') }}" class="flex flex-wrap gap-4 items-end">
-                <div class="flex-1 min-w-[200px]">
-                    <label for="month" class="block text-sm font-medium text-gray-700 mb-1">Bulan</label>
-                    <select name="month" id="month" class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
-                        <option value="">Semua Bulan</option>
-                        @for($i = 1; $i <= 12; $i++)
-                            <option value="{{ $i }}" {{ request('month') == $i ? 'selected' : '' }}>
-                                {{ Carbon\Carbon::create(null, $i, 1)->format('F') }}
-                            </option>
-                        @endfor
-                    </select>
+            <!-- Tab Navigation -->
+            <div class="mb-4">
+                <div class="border-b border-gray-200">
+                    <nav class="-mb-px flex space-x-8">
+                        <button type="button" id="monthly-tab" class="tab-button active py-2 px-1 border-b-2 border-blue-500 font-medium text-sm text-blue-600">
+                            Filter Bulanan
+                        </button>
+                        <button type="button" id="daterange-tab" class="tab-button py-2 px-1 border-b-2 border-transparent font-medium text-sm text-gray-500 hover:text-gray-700 hover:border-gray-300">
+                            Filter Rentang Tanggal
+                        </button>
+                    </nav>
                 </div>
-                
-                <div class="flex-1 min-w-[150px]">
-                    <label for="year" class="block text-sm font-medium text-gray-700 mb-1">Tahun</label>
-                    <select name="year" id="year" class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
-                        <option value="">Semua Tahun</option>
-                        @for($year = now()->year; $year >= now()->year - 5; $year--)
-                            <option value="{{ $year }}" {{ request('year') == $year ? 'selected' : '' }}>
-                                {{ $year }}
-                            </option>
-                        @endfor
-                    </select>
-                </div>
-                
-                <div class="flex gap-2">
-                    <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
-                        Filter
-                    </button>
+            </div>
+            
+            <!-- Monthly Filter Form -->
+            <form method="GET" action="{{ route('admin.bookings.index') }}" id="monthly-filter" class="filter-form">
+                <div class="flex flex-wrap gap-4 items-end">
+                    <div class="flex-1 min-w-[200px]">
+                        <label for="month" class="block text-sm font-medium text-gray-700 mb-1">Bulan</label>
+                        <select name="month" id="month" class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                            <option value="">Semua Bulan</option>
+                            @for($i = 1; $i <= 12; $i++)
+                                <option value="{{ $i }}" {{ request('month') == $i ? 'selected' : '' }}>
+                                    {{ Carbon\Carbon::create(null, $i, 1)->format('F') }}
+                                </option>
+                            @endfor
+                        </select>
+                    </div>
                     
-                    <a href="{{ route('admin.bookings.index') }}" class="px-4 py-2 bg-gray-600 text-white rounded-md hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2">
-                        Reset
-                    </a>
+                    <div class="flex-1 min-w-[150px]">
+                        <label for="year" class="block text-sm font-medium text-gray-700 mb-1">Tahun</label>
+                        <select name="year" id="year" class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                            <option value="">Semua Tahun</option>
+                            @for($year = now()->year; $year >= now()->year - 5; $year--)
+                                <option value="{{ $year }}" {{ request('year') == $year ? 'selected' : '' }}>
+                                    {{ $year }}
+                                </option>
+                            @endfor
+                        </select>
+                    </div>
+                    
+                    <div class="flex gap-2">
+                        <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
+                            Filter
+                        </button>
+                        
+                        <a href="{{ route('admin.bookings.index') }}" class="px-4 py-2 bg-gray-600 text-white rounded-md hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2">
+                            Reset
+                        </a>
+                    </div>
+                </div>
+            </form>
+            
+            <!-- Date Range Filter Form -->
+            <form method="GET" action="{{ route('admin.bookings.index') }}" id="daterange-filter" class="filter-form hidden">
+                <div class="flex flex-wrap gap-4 items-end">
+                    <div class="flex-1 min-w-[200px]">
+                        <label for="start_date" class="block text-sm font-medium text-gray-700 mb-1">Tanggal Mulai</label>
+                        <input type="date" name="start_date" id="start_date" value="{{ request('start_date') }}" 
+                               class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                    </div>
+                    
+                    <div class="flex-1 min-w-[200px]">
+                        <label for="end_date" class="block text-sm font-medium text-gray-700 mb-1">Tanggal Selesai</label>
+                        <input type="date" name="end_date" id="end_date" value="{{ request('end_date') }}" 
+                               class="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                    </div>
+                    
+                    <div class="flex gap-2">
+                        <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
+                            Filter
+                        </button>
+                        
+                        <a href="{{ route('admin.bookings.index') }}" class="px-4 py-2 bg-gray-600 text-white rounded-md hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2">
+                            Reset
+                        </a>
+                    </div>
                 </div>
             </form>
             
@@ -71,7 +115,7 @@
                         Download Semua Data
                     </a>
                     
-                    <!-- Download Data Terfilter -->
+                    <!-- Download Data Terfilter Bulanan -->
                     @if(request('month') && request('year'))
                         <a href="{{ route('admin.bookings.download-report', ['month' => request('month'), 'year' => request('year')]) }}" 
                            class="inline-flex items-center px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
@@ -79,6 +123,24 @@
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
                             </svg>
                             Download {{ Carbon\Carbon::create(request('year'), request('month'), 1)->format('F Y') }}
+                        </a>
+                    @endif
+                    
+                    <!-- Download Data Terfilter Rentang Tanggal -->
+                    @if(request('start_date') || request('end_date'))
+                        <a href="{{ route('admin.bookings.download-report', ['start_date' => request('start_date'), 'end_date' => request('end_date')]) }}" 
+                           class="inline-flex items-center px-4 py-2 bg-purple-600 text-white rounded-md hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2">
+                            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                            </svg>
+                            Download 
+                            @if(request('start_date') && request('end_date'))
+                                {{ Carbon\Carbon::parse(request('start_date'))->format('d/m/Y') }} - {{ Carbon\Carbon::parse(request('end_date'))->format('d/m/Y') }}
+                            @elseif(request('start_date'))
+                                Mulai {{ Carbon\Carbon::parse(request('start_date'))->format('d/m/Y') }}
+                            @else
+                                Sampai {{ Carbon\Carbon::parse(request('end_date'))->format('d/m/Y') }}
+                            @endif
                         </a>
                     @endif
                 </div>
@@ -172,4 +234,56 @@
                 </div>
             </div>
 </x-app-layout>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const monthlyTab = document.getElementById('monthly-tab');
+    const daterangeTab = document.getElementById('daterange-tab');
+    const monthlyFilter = document.getElementById('monthly-filter');
+    const daterangeFilter = document.getElementById('daterange-filter');
+    
+    // Check if we have date range parameters in URL to show the correct tab
+    const urlParams = new URLSearchParams(window.location.search);
+    const hasDateRange = urlParams.has('start_date') || urlParams.has('end_date');
+    const hasMonthly = urlParams.has('month') || urlParams.has('year');
+    
+    if (hasDateRange && !hasMonthly) {
+        showDateRangeTab();
+    }
+    
+    monthlyTab.addEventListener('click', function() {
+        showMonthlyTab();
+    });
+    
+    daterangeTab.addEventListener('click', function() {
+        showDateRangeTab();
+    });
+    
+    function showMonthlyTab() {
+        // Update tab styles
+        monthlyTab.classList.add('active', 'border-blue-500', 'text-blue-600');
+        monthlyTab.classList.remove('border-transparent', 'text-gray-500');
+        
+        daterangeTab.classList.remove('active', 'border-blue-500', 'text-blue-600');
+        daterangeTab.classList.add('border-transparent', 'text-gray-500');
+        
+        // Show/hide forms
+        monthlyFilter.classList.remove('hidden');
+        daterangeFilter.classList.add('hidden');
+    }
+    
+    function showDateRangeTab() {
+        // Update tab styles
+        daterangeTab.classList.add('active', 'border-blue-500', 'text-blue-600');
+        daterangeTab.classList.remove('border-transparent', 'text-gray-500');
+        
+        monthlyTab.classList.remove('active', 'border-blue-500', 'text-blue-600');
+        monthlyTab.classList.add('border-transparent', 'text-gray-500');
+        
+        // Show/hide forms
+        daterangeFilter.classList.remove('hidden');
+        monthlyFilter.classList.add('hidden');
+    }
+});
+</script>
 

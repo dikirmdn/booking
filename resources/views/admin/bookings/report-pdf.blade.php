@@ -11,10 +11,35 @@
             padding: 20px;
         }
         .header {
-            text-align: center;
             margin-bottom: 30px;
             border-bottom: 2px solid #333;
             padding-bottom: 15px;
+            position: relative;
+        }
+        .header-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .header-table td {
+            border: none;
+            padding: 0;
+            vertical-align: middle;
+        }
+        .logo-cell {
+            width: 100px;
+            text-align: left;
+            padding-right: 15px;
+        }
+        .title-cell {
+            text-align: center;
+        }
+        .spacer-cell {
+            width: 100px;
+        }
+        .logo {
+            width: 90px;
+            height: auto;
+            max-height: 90px;
         }
         .header h1 {
             margin: 0;
@@ -92,9 +117,23 @@
 </head>
 <body>
     <div class="header">
-        <h1>Laporan Booking Ruang Meeting</h1>
-        <p>Periode: {{ $period }}</p>
-        <p>Dicetak pada: {{ now()->format('d F Y H:i') }}</p>
+        <table class="header-table">
+            <tr>
+                <td class="logo-cell">
+                    @if(!empty($logoBase64))
+                        <img src="{{ $logoBase64 }}" alt="Logo DSI" class="logo">
+                    @endif
+                </td>
+                <td class="title-cell">
+                    <h1>{{ $title }}</h1>
+                    <p>Periode: {{ $period }}</p>
+                    <p>Dicetak pada: {{ now()->format('d F Y H:i') }}</p>
+                </td>
+                <td class="spacer-cell">
+                    <!-- Spacer untuk menyeimbangkan logo -->
+                </td>
+            </tr>
+        </table>
     </div>
 
     <div class="stats">
@@ -130,6 +169,7 @@
                 <th>Tanggal Booking</th>
                 <th>Ruangan</th>
                 <th>Judul</th>
+                <th>Deskripsi</th>
                 <th>Pemesan</th>
                 <th>Waktu Mulai</th>
                 <th>Waktu Selesai</th>
@@ -143,6 +183,7 @@
                 <td>{{ $booking->created_at->format('d/m/Y') }}</td>
                 <td>{{ $booking->room->name }}</td>
                 <td>{{ $booking->title }}</td>
+                <td>{{ $booking->description}}</td>
                 <td>{{ $booking->user->name }}</td>
                 <td>{{ $booking->start_time->format('d/m/Y H:i') }}</td>
                 <td>{{ $booking->end_time->format('d/m/Y H:i') }}</td>

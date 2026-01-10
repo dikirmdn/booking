@@ -12,6 +12,14 @@ class BookingController extends Controller
 {
     public function index(Request $request)
     {
+        // Validasi input tanggal
+        $request->validate([
+            'start_date' => 'nullable|date',
+            'end_date' => 'nullable|date|after_or_equal:start_date',
+            'month' => 'nullable|integer|between:1,12',
+            'year' => 'nullable|integer|min:2020|max:' . (now()->year + 5),
+        ]);
+        
         $query = Booking::with(['room', 'user']);
         
         // Filter berdasarkan bulan jika ada
@@ -20,6 +28,15 @@ class BookingController extends Controller
             $year = $request->year;
             $query->whereMonth('start_time', $month)
                   ->whereYear('start_time', $year);
+        }
+        
+        // Filter berdasarkan rentang tanggal
+        if ($request->filled('start_date')) {
+            $query->whereDate('start_time', '>=', $request->start_date);
+        }
+        
+        if ($request->filled('end_date')) {
+            $query->whereDate('start_time', '<=', $request->end_date);
         }
         
         $bookings = $query->latest()->paginate(15);
@@ -150,6 +167,14 @@ class BookingController extends Controller
 
     public function downloadReport(Request $request)
     {
+        // Validasi input tanggal
+        $request->validate([
+            'start_date' => 'nullable|date',
+            'end_date' => 'nullable|date|after_or_equal:start_date',
+            'month' => 'nullable|integer|between:1,12',
+            'year' => 'nullable|integer|min:2020|max:' . (now()->year + 5),
+        ]);
+        
         $query = Booking::with(['room', 'user']);
         
         $title = 'Laporan Booking';
@@ -167,6 +192,30 @@ class BookingController extends Controller
             $title = "Laporan Booking - {$monthName}";
         }
         
+        // Filter berdasarkan rentang tanggal
+        if ($request->filled('start_date') && $request->filled('end_date')) {
+            $startDate = Carbon::parse($request->start_date);
+            $endDate = Carbon::parse($request->end_date);
+            
+            $query->whereDate('start_time', '>=', $startDate)
+                  ->whereDate('start_time', '<=', $endDate);
+            
+            $period = $startDate->format('d F Y') . ' - ' . $endDate->format('d F Y');
+            $title = "Laporan Booking - {$period}";
+        } elseif ($request->filled('start_date')) {
+            $startDate = Carbon::parse($request->start_date);
+            $query->whereDate('start_time', '>=', $startDate);
+            
+            $period = 'Mulai ' . $startDate->format('d F Y');
+            $title = "Laporan Booking - {$period}";
+        } elseif ($request->filled('end_date')) {
+            $endDate = Carbon::parse($request->end_date);
+            $query->whereDate('start_time', '<=', $endDate);
+            
+            $period = 'Sampai ' . $endDate->format('d F Y');
+            $title = "Laporan Booking - {$period}";
+        }
+        
         $bookings = $query->orderBy('start_time', 'desc')->get();
         
         // Statistik
@@ -178,11 +227,40 @@ class BookingController extends Controller
             'cancelled' => $bookings->where('status', 'cancelled')->count(),
         ];
         
-        $pdf = Pdf::loadView('admin.bookings.report-pdf', compact('bookings', 'stats', 'title', 'period'));
+        // Encode logo ke base64 untuk kompatibilitas PDF
+        $logoPath = public_path('img/logodsi.png');
+        $logoBase64 = '';
+        if (file_exists($logoPath)) {
+            $logoData = file_get_contents($logoPath);
+            $logoBase64 = 'data:image/png;base64,' . base64_encode($logoData);
+        }
         
-        $filename = 'laporan-booking-' . ($request->filled('month') && $request->filled('year') 
-            ? $request->year . '-' . str_pad($request->month, 2, '0', STR_PAD_LEFT)
-            : 'semua') . '.pdf';
+        $pdf = Pdf::loadView('admin.bookings.report-pdf', compact('bookings', 'stats', 'title', 'period', 'logoBase64'));
+        
+        // Set paper size dan orientasi
+        $pdf->setPaper('A4', 'portrait');
+        
+        // Set options untuk DomPDF
+        $pdf->setOptions([
+            'isHtml5ParserEnabled' => true,
+            'isPhpEnabled' => true,
+            'isRemoteEnabled' => true,
+        ]);
+        
+        // Generate filename berdasarkan filter
+        $filename = 'laporan-booking-';
+        if ($request->filled('month') && $request->filled('year')) {
+            $filename .= $request->year . '-' . str_pad($request->month, 2, '0', STR_PAD_LEFT);
+        } elseif ($request->filled('start_date') && $request->filled('end_date')) {
+            $filename .= Carbon::parse($request->start_date)->format('Y-m-d') . '_' . Carbon::parse($request->end_date)->format('Y-m-d');
+        } elseif ($request->filled('start_date')) {
+            $filename .= 'dari-' . Carbon::parse($request->start_date)->format('Y-m-d');
+        } elseif ($request->filled('end_date')) {
+            $filename .= 'sampai-' . Carbon::parse($request->end_date)->format('Y-m-d');
+        } else {
+            $filename .= 'semua';
+        }
+        $filename .= '.pdf';
             
         return $pdf->download($filename);
     }
