@@ -1,0 +1,443 @@
+/* Home Page New Design Styles */
+
+/* Schedule Table Enhancements */
+.schedule-table {
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+.schedule-table th {
+    background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.schedule-table tbody tr:hover {
+    background-color: #f8fafc;
+    transition: background-color 0.2s ease;
+}
+
+/* Responsive table layout for 2 rooms */
+.schedule-table table {
+    table-layout: fixed;
+    width: 100%;
+}
+
+/* When there are 2 rooms, make columns more balanced */
+.schedule-table th:first-child,
+.schedule-table td:first-child {
+    width: 15%; /* Time column */
+}
+
+.schedule-table th:last-child,
+.schedule-table td:last-child {
+    width: 10%; /* Action column */
+}
+
+/* Room columns will share the remaining space equally */
+.schedule-table th:not(:first-child):not(:last-child),
+.schedule-table td:not(:first-child):not(:last-child) {
+    width: auto;
+    min-width: 150px;
+}
+
+/* Special layout for 2 rooms - more balanced spacing */
+.schedule-table table:has(th:nth-child(4)) th:nth-child(2),
+.schedule-table table:has(th:nth-child(4)) td:nth-child(2),
+.schedule-table table:has(th:nth-child(4)) th:nth-child(3),
+.schedule-table table:has(th:nth-child(4)) td:nth-child(3) {
+    width: 37.5%; /* Equal width for 2 room columns */
+}
+
+/* JavaScript-based layout classes for better browser compatibility */
+.schedule-table .two-rooms-layout th:nth-child(2),
+.schedule-table .two-rooms-layout td:nth-child(2),
+.schedule-table .two-rooms-layout th:nth-child(3),
+.schedule-table .two-rooms-layout td:nth-child(3) {
+    width: 37.5%; /* Equal width for 2 room columns */
+}
+
+.schedule-table .three-rooms-layout th:nth-child(2),
+.schedule-table .three-rooms-layout td:nth-child(2),
+.schedule-table .three-rooms-layout th:nth-child(3),
+.schedule-table .three-rooms-layout td:nth-child(3),
+.schedule-table .three-rooms-layout th:nth-child(4),
+.schedule-table .three-rooms-layout td:nth-child(4) {
+    width: 25%; /* Equal width for 3 room columns */
+}
+
+/* Center alignment for status badges */
+.schedule-table td:not(:first-child):not(:last-child) {
+    text-align: center;
+    vertical-align: middle;
+}
+
+.schedule-table td:not(:first-child):not(:last-child) > div {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+}
+
+.schedule-table th:not(:first-child):not(:last-child) {
+    text-align: center;
+}
+
+/* Scrollable Schedule Table */
+.schedule-table-body {
+    /* Custom scrollbar */
+    scrollbar-width: thin;
+    scrollbar-color: #cbd5e0 #f7fafc;
+}
+
+.schedule-table-body::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+.schedule-table-body::-webkit-scrollbar-track {
+    background: #f7fafc;
+    border-radius: 4px;
+}
+
+.schedule-table-body::-webkit-scrollbar-thumb {
+    background: #cbd5e0;
+    border-radius: 4px;
+    transition: background 0.2s ease;
+}
+
+.schedule-table-body::-webkit-scrollbar-thumb:hover {
+    background: #a0aec0;
+}
+
+.schedule-table-body::-webkit-scrollbar-corner {
+    background: #f7fafc;
+}
+
+/* Sticky time column */
+.schedule-table-body td:first-child {
+    position: sticky;
+    left: 0;
+    z-index: 10;
+    background: white;
+    border-right: 1px solid #e2e8f0;
+}
+
+/* Current time indicator */
+.current-time-row {
+    background-color: #eff6ff !important;
+    border-left: 4px solid #3b82f6;
+}
+
+.current-time-row td:first-child {
+    background-color: #eff6ff !important;
+    font-weight: 600;
+    color: #1d4ed8;
+}
+
+/* Quick book hover effect */
+.quick-book-available {
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.quick-book-available:hover {
+    transform: scale(1.05);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Status Badge Styles */
+.status-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.25rem 0.75rem;
+    border-radius: 9999px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.025em;
+    transition: all 0.2s ease;
+    margin: 0 auto;
+    min-width: 80px;
+}
+
+/* Ensure badges are centered in their cells */
+.schedule-table td:not(:first-child):not(:last-child) span {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.status-tersedia {
+    background-color: #10b981;
+    color: white;
+}
+
+.status-tersedia:hover {
+    background-color: #059669;
+    transform: translateY(-1px);
+}
+
+.status-booked {
+    background-color: #ef4444;
+    color: white;
+}
+
+.status-menunggu {
+    background-color: #f59e0b;
+    color: white;
+}
+
+/* Scroll indicator animation */
+.scroll-indicator {
+    animation: bounce 2s infinite;
+}
+
+@keyframes bounce {
+    0%, 20%, 50%, 80%, 100% {
+        transform: translateY(0);
+    }
+    40% {
+        transform: translateY(-3px);
+    }
+    60% {
+        transform: translateY(-2px);
+    }
+}
+
+/* Room Card Enhancements */
+.room-card {
+    transition: all 0.3s ease;
+    border-radius: 12px;
+    overflow: hidden;
+    cursor: pointer;
+}
+
+.room-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+}
+
+.room-card:active {
+    transform: translateY(-2px);
+}
+
+/* Room card loading state */
+.room-card.loading {
+    opacity: 0.7;
+    pointer-events: none;
+    transform: scale(0.98);
+}
+
+.room-image {
+    position: relative;
+    overflow: hidden;
+}
+
+.room-image::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(16, 185, 129, 0.1) 100%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.room-card:hover .room-image::after {
+    opacity: 1;
+}
+
+/* Button hover states inside cards */
+.room-card button {
+    position: relative;
+    z-index: 10;
+}
+
+.room-card button:hover {
+    transform: translateY(-1px);
+}
+
+/* Prevent card click when clicking buttons */
+.room-card .button-container {
+    position: relative;
+    z-index: 10;
+}
+
+/* Filter Controls */
+.filter-controls {
+    background: white;
+    padding: 1rem;
+    border-radius: 12px;
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+    margin-bottom: 2rem;
+    border: 1px solid #e5e7eb;
+}
+
+.filter-controls select,
+.filter-controls input {
+    transition: all 0.2s ease;
+    min-height: 40px;
+}
+
+.filter-controls select:focus,
+.filter-controls input:focus {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+.filter-controls label {
+    font-weight: 500;
+    color: #374151;
+    margin-bottom: 0.25rem;
+}
+
+/* Mobile-specific filter styles */
+@media (max-width: 640px) {
+    .filter-controls {
+        padding: 1rem;
+        margin-bottom: 1.5rem;
+    }
+    
+    .filter-controls .grid {
+        gap: 1rem;
+    }
+    
+    .filter-controls select,
+    .filter-controls input {
+        min-height: 44px; /* Better touch target for mobile */
+        font-size: 16px; /* Prevent zoom on iOS */
+    }
+    
+    .filter-controls label {
+        font-size: 0.875rem;
+        font-weight: 600;
+    }
+}
+
+/* Button Enhancements */
+.btn-primary {
+    background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+    transition: all 0.2s ease;
+}
+
+.btn-primary:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 6px -1px rgba(59, 130, 246, 0.4), 0 2px 4px -1px rgba(59, 130, 246, 0.2);
+}
+
+.btn-secondary {
+    transition: all 0.2s ease;
+}
+
+.btn-secondary:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+/* Header Enhancements */
+.header-nav {
+    backdrop-filter: blur(10px);
+    background: rgba(30, 58, 138, 0.95);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .hero-content h1 {
+        font-size: 2.5rem;
+    }
+    
+    .schedule-table {
+        font-size: 0.875rem;
+    }
+    
+    .schedule-table-body {
+        max-height: 300px;
+    }
+    
+    .schedule-table-body td,
+    .schedule-table-body th {
+        padding: 0.5rem;
+    }
+    
+    /* Adjust column widths for mobile */
+    .schedule-table th:first-child,
+    .schedule-table td:first-child {
+        width: 20%;
+        min-width: 60px;
+    }
+    
+    .schedule-table th:last-child,
+    .schedule-table td:last-child {
+        width: 15%;
+        min-width: 50px;
+    }
+    
+    .schedule-table th:not(:first-child):not(:last-child),
+    .schedule-table td:not(:first-child):not(:last-child) {
+        min-width: 120px;
+    }
+    
+    /* Smaller badges on mobile */
+    .schedule-table td span {
+        font-size: 0.625rem;
+        padding: 0.125rem 0.5rem;
+        min-width: 70px;
+    }
+}
+
+@media (max-width: 640px) {
+    .hero-content h1 {
+        font-size: 2rem;
+        line-height: 1.2;
+    }
+    
+    .hero-content .hero-buttons {
+        flex-direction: column;
+        gap: 0.75rem;
+    }
+    
+    .hero-content .hero-buttons a,
+    .hero-content .hero-buttons button {
+        width: 100%;
+        text-align: center;
+        justify-content: center;
+    }
+}
+
+/* Loading States */
+.loading {
+    opacity: 0.6;
+    pointer-events: none;
+}
+
+.loading::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 20px;
+    height: 20px;
+    margin: -10px 0 0 -10px;
+    border: 2px solid #f3f3f3;
+    border-top: 2px solid #3b82f6;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Accessibility Improvements */
+.focus\:ring-2:focus {
+    outline: 2px solid transparent;
+    outline-offset: 2px;
+}
+

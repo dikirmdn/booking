@@ -10,7 +10,7 @@ class RoomController extends Controller
 {
     public function index()
     {
-        $rooms = Room::latest()->paginate(10);
+        $rooms = Room::withCount('bookings')->latest()->paginate(10);
         return view('admin.rooms.index', compact('rooms'));
     }
 
@@ -25,11 +25,25 @@ class RoomController extends Controller
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
             'capacity' => 'required|integer|min:1',
+            'floor' => 'nullable|string|max:255',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048', // max 2MB
             'facilities' => 'nullable|string',
             'is_active' => 'boolean',
+        ], [
+            'image.max' => 'Ukuran gambar terlalu besar. Silakan pilih gambar dengan ukuran maksimal 2 MB.',
+            'image.mimes' => 'Format gambar tidak didukung. Silakan gunakan format JPEG, PNG, JPG, atau GIF.',
+            'image.image' => 'File yang diupload harus berupa gambar.',
         ]);
 
-        // Convert facilities string to array
+        // Handle image upload
+        if ($request->hasFile('image')) {
+            $image = $request->file('image');
+            $imageName = time() . '_' . $image->getClientOriginalName();
+            $image->move(public_path('images/rooms'), $imageName);
+            $validated['image'] = 'images/rooms/' . $imageName;
+        }
+
+        // fasilitas menjadi array
         if (!empty($validated['facilities'])) {
             $validated['facilities'] = array_map('trim', explode(',', $validated['facilities']));
         } else {
@@ -61,11 +75,30 @@ class RoomController extends Controller
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
             'capacity' => 'required|integer|min:1',
+            'floor' => 'nullable|string|max:255',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048', // max 2MB
             'facilities' => 'nullable|string',
             'is_active' => 'boolean',
+        ], [
+            'image.max' => 'Ukuran gambar terlalu besar. Silakan pilih gambar dengan ukuran maksimal 2 MB.',
+            'image.mimes' => 'Format gambar tidak didukung. Silakan gunakan format JPEG, PNG, JPG, atau GIF.',
+            'image.image' => 'File yang diupload harus berupa gambar.',
         ]);
 
-        // Convert facilities string to array
+        // Handle image upload
+        if ($request->hasFile('image')) {
+            // Delete old image if exists
+            if ($room->image && file_exists(public_path($room->image))) {
+                unlink(public_path($room->image));
+            }
+            
+            $image = $request->file('image');
+            $imageName = time() . '_' . $image->getClientOriginalName();
+            $image->move(public_path('images/rooms'), $imageName);
+            $validated['image'] = 'images/rooms/' . $imageName;
+        }
+
+        // fasilitas ke array
         if (!empty($validated['facilities'])) {
             $validated['facilities'] = array_map('trim', explode(',', $validated['facilities']));
         } else {
@@ -82,6 +115,11 @@ class RoomController extends Controller
 
     public function destroy(Room $room)
     {
+        // Delete image if exists
+        if ($room->image && file_exists(public_path($room->image))) {
+            unlink(public_path($room->image));
+        }
+        
         $room->delete();
 
         return redirect()->route('admin.rooms.index')

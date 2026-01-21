@@ -9,9 +9,22 @@
 
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+            <!-- Display validation errors with alert -->
+            @if ($errors->any())
+                <div class="mb-6">
+                    <x-alert type="error" title="Terjadi Kesalahan!" :dismissible="true">
+                        <ul class="list-disc list-inside space-y-1">
+                            @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </x-alert>
+                </div>
+            @endif
+
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6">
-                    <form method="POST" action="{{ route('admin.rooms.update', $room) }}">
+                    <form method="POST" action="{{ route('admin.rooms.update', $room) }}" enctype="multipart/form-data">
                         @csrf
                         @method('PUT')
 
@@ -31,6 +44,25 @@
                             <x-input-label for="capacity" :value="__('Kapasitas')" />
                             <x-text-input id="capacity" class="block mt-1 w-full" type="number" name="capacity" :value="old('capacity', $room->capacity)" required min="1" />
                             <x-input-error :messages="$errors->get('capacity')" class="mt-2" />
+                        </div>
+
+                        <div class="mb-4">
+                            <x-input-label for="floor" :value="__('Lantai')" />
+                            <x-text-input id="floor" class="block mt-1 w-full" type="text" name="floor" :value="old('floor', $room->floor)" placeholder="Contoh: Lantai 1, Lantai 2" />
+                            <x-input-error :messages="$errors->get('floor')" class="mt-2" />
+                        </div>
+
+                        <div class="mb-4">
+                            <x-input-label for="image" :value="__('Gambar Ruangan')" />
+                            @if($room->image)
+                                <div class="mb-2">
+                                    <img src="{{ asset($room->image) }}" alt="Current room image" class="w-32 h-32 object-cover rounded-lg">
+                                    <p class="text-sm text-gray-500 mt-1">Gambar saat ini</p>
+                                </div>
+                            @endif
+                            <input id="image" class="block mt-1 w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500" type="file" name="image" accept="image/*" />
+                            <x-input-error :messages="$errors->get('image')" class="mt-2" />
+                            <p class="mt-1 text-sm text-gray-500">Maksimal ukuran file 2MB. Format yang didukung: JPEG, PNG, JPG, GIF. Kosongkan jika tidak ingin mengubah gambar.</p>
                         </div>
 
                         <div class="mb-4">
@@ -58,5 +90,9 @@
             </div>
         </div>
     </div>
+
+    @push('scripts')
+    <script src="{{ asset('js/room-image-validation.js') }}"></script>
+    @endpush
 </x-app-layout>
 

@@ -14,6 +14,7 @@ Route::get('/', [CalendarController::class, 'index'])->name('home');
 Route::get('/calendar', [CalendarController::class, 'index'])->name('calendar.index');
 Route::get('/calendar/room/{room}', [CalendarController::class, 'room'])->name('calendar.room');
 Route::get('/calendar/api', [CalendarController::class, 'api'])->name('calendar.api');
+Route::get('/api/schedule', [CalendarController::class, 'getScheduleData'])->name('api.schedule');
 
 // Demo routes
 Route::get('/demo/alerts', function () {

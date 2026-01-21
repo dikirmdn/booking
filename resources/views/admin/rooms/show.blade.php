@@ -11,6 +11,12 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6">
+                    @if($room->image)
+                    <div class="mb-6">
+                        <img src="{{ asset($room->image) }}" alt="{{ $room->name }}" class="w-full max-w-md h-64 object-cover rounded-lg shadow-md">
+                    </div>
+                    @endif
+
                     <div class="mb-4">
                         <h3 class="text-lg font-semibold text-gray-900">{{ $room->name }}</h3>
                         <p class="text-gray-600 mt-2">{{ $room->description ?? '-' }}</p>
@@ -21,6 +27,12 @@
                             <span class="text-sm font-medium text-gray-500">Kapasitas:</span>
                             <span class="ml-2 text-gray-900">{{ $room->capacity }} orang</span>
                         </div>
+                        @if($room->floor)
+                        <div>
+                            <span class="text-sm font-medium text-gray-500">Lantai:</span>
+                            <span class="ml-2 text-gray-900">{{ $room->floor }}</span>
+                        </div>
+                        @endif
                         <div>
                             <span class="text-sm font-medium text-gray-500">Status:</span>
                             @if($room->is_active)
