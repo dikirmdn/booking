@@ -104,7 +104,7 @@ class AlertSystem {
             success: 'border-green-500',
             error: 'border-red-500',
             warning: 'border-yellow-500',
-            info: 'border-blue-500'
+            info: 'border-green-500'
         };
         return classes[type] || classes.info;
     }
@@ -114,7 +114,7 @@ class AlertSystem {
             success: 'text-green-500',
             error: 'text-red-500',
             warning: 'text-yellow-500',
-            info: 'text-blue-500'
+            info: 'text-green-500'
         };
         return colors[type] || colors.info;
     }
@@ -180,7 +180,7 @@ window.confirmAction = function(message, options = {}) {
             success: 'text-green-500',
             error: 'text-red-500',
             warning: 'text-yellow-500',
-            info: 'text-blue-500'
+            info: 'text-green-500'
         }[config.type];
         
         const icon = {
@@ -209,7 +209,7 @@ window.confirmAction = function(message, options = {}) {
                     <button class="cancel-btn px-4 py-2 text-gray-600 hover:text-gray-800 font-medium rounded-lg hover:bg-gray-100 transition-colors duration-200">
                         ${config.cancelText}
                     </button>
-                    <button class="confirm-btn px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-colors duration-200">
+                    <button class="confirm-btn px-4 py-2 bg-green-600 hover:bg-green-700 text-white font-medium rounded-lg transition-colors duration-200">
                         ${config.confirmText}
                     </button>
                 </div>

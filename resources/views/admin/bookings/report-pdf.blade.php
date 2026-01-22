@@ -171,6 +171,7 @@
                 <th>Judul</th>
                 <th>Deskripsi</th>
                 <th>Pemesan</th>
+                <th>Nama Pembooking</th>
                 <th>Waktu Mulai</th>
                 <th>Waktu Selesai</th>
                 <th>Status</th>
@@ -185,6 +186,7 @@
                 <td>{{ $booking->title }}</td>
                 <td>{{ $booking->description}}</td>
                 <td>{{ $booking->user->name }}</td>
+                <td>{{ $booking->booker_name }}</td>
                 <td>{{ $booking->start_time->format('d/m/Y H:i') }}</td>
                 <td>{{ $booking->end_time->format('d/m/Y H:i') }}</td>
                 <td>

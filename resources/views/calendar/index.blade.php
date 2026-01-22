@@ -270,7 +270,7 @@
                 aspectRatio: window.innerWidth < 640 ? 1.2 : 1.8,
                 eventDidMount: function(info) {
                     const props = info.event.extendedProps;
-                    const tooltip = `${props.booking_title || info.event.title}\nRuangan: ${props.room}\nPemesan: ${props.user}\nWaktu: ${props.start_time}-${props.end_time}`;
+                    const tooltip = `${props.booking_title || info.event.title}\nRuangan: ${props.room}\nPembooking: ${props.booker_name}\nWaktu: ${props.start_time}-${props.end_time}`;
                     info.el.setAttribute('title', tooltip);
                     info.el.style.cursor = 'pointer';
                 },
@@ -313,8 +313,8 @@
                                         <span class="text-sm text-gray-900">${props.room}</span>
                                     </div>
                                     <div class="flex justify-between">
-                                        <span class="text-sm font-medium text-gray-500">Pemesan:</span>
-                                        <span class="text-sm text-gray-900">${props.user}</span>
+                                        <span class="text-sm font-medium text-gray-500">Pembooking:</span>
+                                        <span class="text-sm text-gray-900">${props.booker_name}</span>
                                     </div>
                                     <div class="flex justify-between">
                                         <span class="text-sm font-medium text-gray-500">Tanggal:</span>

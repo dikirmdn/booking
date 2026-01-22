@@ -45,6 +45,7 @@ class CalendarController extends Controller
             '20:00' => ['start' => '20:00', 'end' => '21:00'],
             '21:00' => ['start' => '21:00', 'end' => '22:00'],
             '22:00' => ['start' => '22:00', 'end' => '23:00'],
+            '23:00' => ['start' => '23:00', 'end' => '24:00'],
         ];
 
         $schedule = [];
@@ -119,15 +120,15 @@ class CalendarController extends Controller
 
         $bookings = $query->get()
             ->map(function ($booking) {
-                // Pastikan timezone yang benar
+                // Pastikan timezone yang benar - gunakan format yang tidak mengubah timezone
                 $startTime = $booking->start_time->setTimezone('Asia/Jakarta');
                 $endTime = $booking->end_time->setTimezone('Asia/Jakarta');
                 
                 return [
                     'id' => $booking->id,
-                    'title' => "{$startTime->format('H:i')}-{$endTime->format('H:i')} {$booking->user->name}",
-                    'start' => $startTime->toISOString(),
-                    'end' => $endTime->toISOString(),
+                    'title' => "{$startTime->format('H:i')}-{$endTime->format('H:i')} {$booking->booker_name}",
+                    'start' => $startTime->format('Y-m-d H:i:s'),
+                    'end' => $endTime->format('Y-m-d H:i:s'),
                     'backgroundColor' => $this->getStatusColor($booking->status),
                     'borderColor' => $this->getStatusColor($booking->status),
                     'textColor' => '#ffffff',
@@ -137,6 +138,7 @@ class CalendarController extends Controller
                         'booking_title' => $booking->title,
                         'room' => $booking->room->name,
                         'user' => $booking->user->name,
+                        'booker_name' => $booking->booker_name,
                         'description' => $booking->description ?? '',
                         'status' => $booking->status,
                         'start_time' => $startTime->format('H:i'),

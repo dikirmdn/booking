@@ -388,7 +388,7 @@
             const calendar = new FullCalendar.Calendar(calendarEl, {
                 initialView: 'dayGridMonth',
                 locale: 'id',
-                timeZone: 'Asia/Jakarta',
+                timeZone: 'Asia/Jakarta', // Gunakan timezone Jakarta yang konsisten
                 displayEventTime: false, // Nonaktifkan tampilan waktu
                 eventDisplay: 'block',
                 buttonText: {
@@ -425,7 +425,7 @@
                 eventDisplay: 'block',
                 displayEventTime: false, // Nonaktifkan tampilan waktu default
                 slotMinTime: '07:00:00',
-                slotMaxTime: '22:00:00',
+                slotMaxTime: '23:00:00',
                 slotDuration: '01:00:00',
                 slotLabelInterval: '01:00:00',
                 slotLabelFormat: {
@@ -439,16 +439,16 @@
                 selectMirror: true,
                 selectConstraint: {
                     start: '07:00',
-                    end: '22:00'
+                    end: '23:00'
                 },
                 businessHours: {
                     daysOfWeek: [1, 2, 3, 4, 5, 6], // Monday - Saturday
                     startTime: '07:00',
-                    endTime: '22:00'
+                    endTime: '23:00'
                 },
                 eventDidMount: function(info) {
                     const props = info.event.extendedProps;
-                    const tooltip = `${props.booking_title || info.event.title}\nPemesan: ${props.user}\nWaktu: ${props.start_time}-${props.end_time}`;
+                    const tooltip = `${props.booking_title || info.event.title}\nPemesan: ${props.booker_name}\nWaktu: ${props.start_time}-${props.end_time}`;
                     info.el.setAttribute('title', tooltip);
                     info.el.style.cursor = 'pointer';
                 },
@@ -492,7 +492,7 @@
                                     </div>
                                     <div class="flex justify-between">
                                         <span class="text-sm font-medium text-gray-500">Pemesan:</span>
-                                        <span class="text-sm text-gray-900">${props.user}</span>
+                                        <span class="text-sm text-gray-900">${props.booker_name}</span>
                                     </div>
                                     <div class="flex justify-between">
                                         <span class="text-sm font-medium text-gray-500">Tanggal:</span>

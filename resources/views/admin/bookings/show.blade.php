@@ -20,8 +20,8 @@
                                 <span class="ml-2 text-gray-900">{{ $booking->room->name }}</span>
                             </div>
                             <div>
-                                <span class="text-sm font-medium text-gray-500">Pemesan:</span>
-                                <span class="ml-2 text-gray-900">{{ $booking->user->name }}</span>
+                                <span class="text-sm font-medium text-gray-500">Pembooking:</span>
+                                <span class="ml-2 text-gray-900">{{ $booking->booker_name }}</span>
                             </div>
                             <div>
                                 <span class="text-sm font-medium text-gray-500">Waktu Mulai:</span>

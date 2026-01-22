@@ -27,6 +27,12 @@
                 </div>
 
                 <div>
+                    <x-input-label for="booker_name" :value="__('Nama Pembooking')" />
+                    <x-text-input id="booker_name" class="block mt-1 w-full" type="text" name="booker_name" :value="old('booker_name', $booking->booker_name)" required />
+                    <x-input-error :messages="$errors->get('booker_name')" class="mt-2" />
+                </div>
+
+                <div>
                     <x-input-label for="title" :value="__('Judul Booking')" />
                     <x-text-input id="title" class="block mt-1 w-full" type="text" name="title" :value="old('title', $booking->title)" required autofocus />
                     <x-input-error :messages="$errors->get('title')" class="mt-2" />

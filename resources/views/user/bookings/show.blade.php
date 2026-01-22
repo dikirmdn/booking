@@ -20,6 +20,10 @@
                                 <span class="ml-2 text-gray-900">{{ $booking->room->name }}</span>
                             </div>
                             <div>
+                                <span class="text-sm font-medium text-gray-500">Pembooking:</span>
+                                <span class="ml-2 text-gray-900">{{ $booking->booker_name }}</span>
+                            </div>
+                            <div>
                                 <span class="text-sm font-medium text-gray-500">Status:</span>
                                 @if($booking->status === 'approved')
                                     <span class="px-2 py-1 ml-2 text-xs font-semibold text-green-800 bg-green-100 rounded-full">Disetujui</span>

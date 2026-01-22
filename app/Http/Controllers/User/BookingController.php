@@ -37,6 +37,7 @@ class BookingController extends Controller
     {
         $validated = $request->validate([
             'room_id' => 'required|exists:rooms,id',
+            'booker_name' => 'required|string|max:255',
             'title' => 'required|string|max:255',
             'description' => 'nullable|string',
             'start_time' => 'required|date',
@@ -130,6 +131,7 @@ class BookingController extends Controller
 
         $validated = $request->validate([
             'room_id' => 'required|exists:rooms,id',
+            'booker_name' => 'required|string|max:255',
             'title' => 'required|string|max:255',
             'description' => 'nullable|string',
             'start_time' => 'required|date',

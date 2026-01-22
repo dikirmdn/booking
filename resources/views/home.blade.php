@@ -3,14 +3,14 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>{{ config('app.name', 'DSI') }}</title>
+    <title>DSI - Room Bookings</title>
     
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
     
     <!-- Scripts -->
-    @vite(['resources/css/app.css', 'resources/css/home-rooms.css', 'resources/css/footer.css', 'resources/css/home-animations.css', 'resources/css/home-new.css', 'resources/js/app.js', 'resources/js/header-scroll.js', 'resources/js/home-animations.js', 'resources/js/home-filters.js'])
+    @vite(['resources/css/app.css', 'resources/css/home-rooms.css', 'resources/css/footer.css', 'resources/css/home-animations.css', 'resources/css/home-new.css', 'resources/css/alerts.css', 'resources/js/app.js', 'resources/js/header-scroll.js', 'resources/js/home-animations.js', 'resources/js/home-filters.js', 'resources/js/alerts.js'])
 </head>
 <body class="font-sans antialiased bg-gray-50">
     <!-- Header -->
@@ -119,81 +119,86 @@
 
             <!-- Schedule Table -->
             <div class="bg-white rounded-lg shadow-lg overflow-hidden schedule-table">
-                <!-- Table Header  -->
-                <div class="bg-gray-50 border-b border-gray-200">
-                    <div class="overflow-x-auto">
+                <!-- Table Container with horizontal scroll -->
+                <div class="overflow-x-auto">
+                    <!-- Table Header  -->  
+                    <div class="bg-gray-50 border-b border-gray-200">
                         <table class="min-w-full">
                             <thead>
                                 <tr>
-                                    <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider w-20">Jam</th>
+                                    <th class="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider sticky left-0 bg-gray-50 z-20 border-r border-gray-200">Jam</th>
                                     @foreach($rooms as $room)
-                                        <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">{{ $room->name }}</th>
+                                        <th class="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            <div class="truncate" title="{{ $room->name }}">{{ $room->name }}</div>
+                                        </th>
                                     @endforeach
-                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-16"></th>
+                                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider sticky right-0 bg-gray-50 z-20 border-l border-gray-200"></th>
                                 </tr>
                             </thead>
                         </table>
                     </div>
-                </div>
-                
-                <!-- Scrollable Table Body -->
-                <div class="overflow-x-auto overflow-y-auto max-h-96 schedule-table-body">
-                    <table class="min-w-full">
-                        <tbody class="bg-white divide-y divide-gray-200">
-                            @foreach($scheduleData as $time => $roomStatuses)
-                                <tr class="hover:bg-gray-50 transition-colors duration-150">
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 w-20 sticky left-0 bg-white border-r border-gray-200">
-                                        <div class="flex items-center">
-                                            <span class="text-gray-900">{{ $time }}</span>
-                                            @if(\Carbon\Carbon::now('Asia/Jakarta')->format('H:00') === $time)
-                                                <div class="ml-2 w-2 h-2 bg-red-500 rounded-full animate-pulse" title="Jam saat ini"></div>
-                                            @endif
-                                        </div>
-                                    </td>
-                                    @foreach($rooms as $room)
-                                        <td class="px-6 py-4 whitespace-nowrap">
-                                            <div class="flex justify-center items-center">
-                                                @php
-                                                    $roomStatus = $roomStatuses[$room->id] ?? ['status' => 'available'];
-                                                    $status = $roomStatus['status'];
-                                                    $user = $roomStatus['user'] ?? null;
-                                                @endphp
-                                                
-                                                @if($status === 'available')
-                                                    <span class="inline-flex px-3 py-1 text-xs font-semibold text-white bg-green-500 rounded-full cursor-pointer hover:bg-green-600 transition-colors"
-                                                          onclick="quickBook('{{ $room->id }}', '{{ $time }}')">
-                                                        Tersedia
-                                                    </span>
-                                                @elseif($status === 'approved')
-                                                    <span class="inline-flex px-3 py-1 text-xs font-semibold text-white bg-red-500 rounded-full" 
-                                                          title="Booked by: {{ $user }}">
-                                                        BOOKED
-                                                    </span>
-                                                @elseif($status === 'pending')
-                                                    <span class="inline-flex px-3 py-1 text-xs font-semibold text-yellow-800 bg-yellow-200 rounded-full"
-                                                          title="Pending by: {{ $user }}">
-                                                        MENUNGGU
-                                                    </span>
-                                                @else
-                                                    <span class="inline-flex px-3 py-1 text-xs font-semibold text-gray-800 bg-gray-200 rounded-full cursor-pointer hover:bg-gray-300 transition-colors"
-                                                          onclick="quickBook('{{ $room->id }}', '{{ $time }}')">
-                                                        Tersedia
-                                                    </span>
+                    
+                    <!-- Scrollable Table Body -->
+                    <div class="overflow-y-auto max-h-96 schedule-table-body">
+                        <table class="min-w-full">
+                            <tbody class="bg-white divide-y divide-gray-200">
+                                @foreach($scheduleData as $time => $roomStatuses)
+                                    <tr class="hover:bg-gray-50 transition-colors duration-150">
+                                        <td class="px-4 py-4 whitespace-nowrap text-sm font-medium text-gray-900 sticky left-0 bg-white z-10 border-r border-gray-200">
+                                            <div class="flex items-center">
+                                                <span class="text-gray-900">{{ $time }}</span>
+                                                @if(\Carbon\Carbon::now('Asia/Jakarta')->format('H:00') === $time)
+                                                    <div class="ml-2 w-2 h-2 bg-red-500 rounded-full animate-pulse" title="Jam saat ini"></div>
                                                 @endif
                                             </div>
                                         </td>
-                                    @endforeach
-                                    <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium w-16">
-                                        <button class="text-gray-400 hover:text-gray-600 transition-colors" onclick="refreshSchedule()" title="Refresh">
-                                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                                                <path fill-rule="evenodd" d="M4 2a1 1 0 011 1v2.101a7.002 7.002 0 0111.601 2.566 1 1 0 11-1.885.666A5.002 5.002 0 005.999 7H9a1 1 0 010 2H4a1 1 0 01-1-1V3a1 1 0 011-1zm.008 9.057a1 1 0 011.276.61A5.002 5.002 0 0014.001 13H11a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0v-2.101a7.002 7.002 0 01-11.601-2.566 1 1 0 01.61-1.276z" clip-rule="evenodd"></path>
-                                            </svg>
-                                        </button>
-                                    </td>
-                                </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
+                                        @foreach($rooms as $room)
+                                            <td class="px-4 py-4 whitespace-nowrap">
+                                                <div class="flex justify-center items-center">
+                                                    @php
+                                                        $roomStatus = $roomStatuses[$room->id] ?? ['status' => 'available'];
+                                                        $status = $roomStatus['status'];
+                                                        $user = $roomStatus['user'] ?? null;
+                                                    @endphp
+                                                    
+                                                    @if($status === 'available')
+                                                        <span class="inline-flex px-2 py-1 text-xs font-semibold text-white bg-green-500 rounded-full cursor-pointer hover:bg-green-600 transition-colors"
+                                                              onclick="quickBook('{{ $room->id }}', '{{ $time }}')"
+                                                              title="Klik untuk booking">
+                                                            Tersedia
+                                                        </span>
+                                                    @elseif($status === 'approved')
+                                                        <span class="inline-flex px-2 py-1 text-xs font-semibold text-white bg-red-500 rounded-full" 
+                                                              title="Booked by: {{ $user }}">
+                                                            BOOKED
+                                                        </span>
+                                                    @elseif($status === 'pending')
+                                                        <span class="inline-flex px-2 py-1 text-xs font-semibold text-yellow-800 bg-yellow-200 rounded-full"
+                                                              title="Pending by: {{ $user }}">
+                                                            MENUNGGU
+                                                        </span>
+                                                    @else
+                                                        <span class="inline-flex px-2 py-1 text-xs font-semibold text-gray-800 bg-gray-200 rounded-full cursor-pointer hover:bg-gray-300 transition-colors"
+                                                              onclick="quickBook('{{ $room->id }}', '{{ $time }}')"
+                                                              title="Klik untuk booking">
+                                                            Tersedia
+                                                        </span>
+                                                    @endif
+                                                </div>
+                                            </td>
+                                        @endforeach
+                                        <td class="px-4 py-4 whitespace-nowrap text-right text-sm font-medium sticky right-0 bg-white z-10 border-l border-gray-200">
+                                            <button class="text-gray-400 hover:text-gray-600 transition-colors" onclick="refreshSchedule()" title="Refresh">
+                                                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                                    <path fill-rule="evenodd" d="M4 2a1 1 0 011 1v2.101a7.002 7.002 0 0111.601 2.566 1 1 0 11-1.885.666A5.002 5.002 0 005.999 7H9a1 1 0 010 2H4a1 1 0 01-1-1V3a1 1 0 011-1zm.008 9.057a1 1 0 011.276.61A5.002 5.002 0 0014.001 13H11a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0v-2.101a7.002 7.002 0 01-11.601-2.566 1 1 0 01.61-1.276z" clip-rule="evenodd"></path>
+                                                </svg>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
                 
                 <!-- Scroll Indicator -->
@@ -203,6 +208,13 @@
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m0 0l7-7 7 7z"></path>
                         </svg>
                         Scroll untuk melihat jam lainnya (08:00 - 22:00)
+                        @if(count($rooms) > 3)
+                            • 
+                            <svg class="w-4 h-4 inline mx-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16l4-4m0 0l4-4m-4 4H3m4 0v6"></path>
+                            </svg>
+                            Geser horizontal untuk melihat ruangan lainnya
+                        @endif
                     </p>
                 </div>
             </div>
@@ -366,12 +378,55 @@
     <!-- Footer -->
     <x-footer />
 
+    <!-- Notification Helper -->
+    <x-notification-helper />
+
     <!-- Inline JavaScript for immediate function availability -->
     <script>
         // Global functions for onclick handlers
         window.refreshSchedule = function() {
             console.log('Refresh clicked');
             location.reload();
+        };
+        
+        window.goToRoomDetail = function(url) {
+            // Show loading toast
+            Alert.info('Memuat detail ruangan...', {
+                title: 'Loading',
+                duration: 2000
+            });
+            window.location.href = url;
+        };
+        
+        window.goToBooking = function(url) {
+            // Check if user is authenticated
+            const isAuthenticated = document.querySelector('form[action*="logout"]') !== null;
+            
+            if (!isAuthenticated) {
+                confirmAction('Anda perlu login terlebih dahulu untuk melakukan booking. Login sekarang?', {
+                    title: 'Login Diperlukan',
+                    confirmText: 'Login',
+                    cancelText: 'Batal',
+                    type: 'info'
+                }).then((confirmed) => {
+                    if (confirmed) {
+                        // Store the intended URL for after login
+                        sessionStorage.setItem('intendedUrl', url);
+                        window.location.href = '/login';
+                    }
+                });
+                return;
+            }
+            
+            // Show loading toast
+            Alert.info('Mengarahkan ke halaman booking...', {
+                title: 'Loading',
+                duration: 2000
+            });
+            
+            setTimeout(() => {
+                window.location.href = url;
+            }, 300);
         };
         
         window.quickBook = function(roomId, time) {
@@ -381,25 +436,71 @@
             const isAuthenticated = document.querySelector('form[action*="logout"]') !== null;
             
             if (!isAuthenticated) {
-                if (confirm('Anda perlu login terlebih dahulu untuk melakukan booking. Login sekarang?')) {
-                    window.location.href = '/login';
-                }
+                confirmAction('Anda perlu login terlebih dahulu untuk melakukan booking. Login sekarang?', {
+                    title: 'Login Diperlukan',
+                    confirmText: 'Login',
+                    cancelText: 'Batal',
+                    type: 'info'
+                }).then((confirmed) => {
+                    if (confirmed) {
+                        // Store the intended booking for after login
+                        sessionStorage.setItem('pendingBooking', JSON.stringify({
+                            roomId: roomId,
+                            time: time,
+                            returnUrl: window.location.href
+                        }));
+                        window.location.href = '/login';
+                    }
+                });
                 return;
             }
             
-            if (confirm(`Apakah Anda ingin booking ruangan ini pada jam ${time}?`)) {
-                // Show loading state
-                const clickedElement = event.target;
-                if (clickedElement) {
-                    clickedElement.style.opacity = '0.7';
-                    clickedElement.style.pointerEvents = 'none';
-                    clickedElement.textContent = 'Loading...';
+            confirmAction(`Apakah Anda ingin booking ruangan ini pada jam ${time}?`, {
+                title: 'Konfirmasi Booking',
+                confirmText: 'Ya, Booking',
+                cancelText: 'Batal',
+                type: 'info'
+            }).then((confirmed) => {
+                if (confirmed) {
+                    // Show loading toast
+                    const loadingToast = Alert.info('Memproses booking...', {
+                        title: 'Memproses',
+                        duration: 0,
+                        dismissible: false
+                    });
+                    
+                    // Show loading state on clicked element
+                    const clickedElement = event.target;
+                    const originalText = clickedElement ? clickedElement.textContent : '';
+                    if (clickedElement) {
+                        clickedElement.style.opacity = '0.7';
+                        clickedElement.style.pointerEvents = 'none';
+                        clickedElement.textContent = 'Loading...';
+                    }
+                    
+                    // Simulate a small delay for better UX
+                    setTimeout(() => {
+                        try {
+                            // Redirect to booking page with pre-filled data
+                            const bookingUrl = `/user/bookings/create?room_id=${roomId}&time=${time}`;
+                            window.location.href = bookingUrl;
+                        } catch (error) {
+                            // Handle error case
+                            Alert.error('Terjadi kesalahan saat mengarahkan ke halaman booking.', {
+                                title: 'Error',
+                                duration: 5000
+                            });
+                            
+                            // Restore button state
+                            if (clickedElement) {
+                                clickedElement.style.opacity = '1';
+                                clickedElement.style.pointerEvents = 'auto';
+                                clickedElement.textContent = originalText;
+                            }
+                        }
+                    }, 500);
                 }
-                
-                // Redirect to booking page with pre-filled data
-                const bookingUrl = `/user/bookings/create?room_id=${roomId}&time=${time}`;
-                window.location.href = bookingUrl;
-            }
+            });
         };
         
         // Adjust table layout based on number of room columns
@@ -409,11 +510,37 @@
                 const headerCells = scheduleTable.querySelectorAll('thead th');
                 const roomColumns = headerCells.length - 2; // Exclude time and action columns
                 
+                // Remove any existing layout classes
+                scheduleTable.classList.remove('two-rooms-layout', 'three-rooms-layout', 'four-rooms-layout', 'many-rooms-layout');
+                
+                // Apply appropriate layout class based on number of rooms
                 if (roomColumns === 2) {
                     scheduleTable.classList.add('two-rooms-layout');
                 } else if (roomColumns === 3) {
                     scheduleTable.classList.add('three-rooms-layout');
+                } else if (roomColumns === 4) {
+                    scheduleTable.classList.add('four-rooms-layout');
+                } else if (roomColumns > 4) {
+                    scheduleTable.classList.add('many-rooms-layout');
                 }
+                
+                // Adjust container width for many rooms
+                const scheduleContainer = document.querySelector('.schedule-table');
+                if (roomColumns > 4 && scheduleContainer) {
+                    const minWidth = 80 + 60 + (roomColumns * 140); // time + action + (rooms * min-width)
+                    scheduleContainer.style.minWidth = minWidth + 'px';
+                }
+            }
+            
+            // Show welcome message for first-time visitors
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.get('welcome') === '1') {
+                setTimeout(() => {
+                    Alert.success('Selamat datang di sistem booking ruang meeting DSI!', {
+                        title: 'Selamat Datang',
+                        duration: 5000
+                    });
+                }, 500);
             }
         });
     </script>
